@@ -19,8 +19,12 @@ class Authentication{
 
 
     function verifyIdTokenGoogle($idToken) {
+        try{
         $client = new Client([ $idToken => $this->IdClient]); // Thay bằng client ID của bạn
         $payload = $client->verifyIdToken($idToken);
+        }catch(\Exception $e){
+            return false;
+        }
         if ($payload) {
             // ID Token hợp lệ, xử lý thông tin người dùng
             $userId = $payload['sub']; // ID người dùng Google
@@ -42,7 +46,7 @@ class Authentication{
            $token = $headers['Authorization'];
            $userData = self::verifyToken($token);
            if($userData){
-               $_SESSION['acc'] = $userData;
+            //    $_SESSION['acc'] = $userData;
                return true;
            }
         }

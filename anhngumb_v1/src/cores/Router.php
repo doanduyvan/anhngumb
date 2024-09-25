@@ -15,8 +15,8 @@ class Router
     {
         $arrUrl = $this->UrlProcess();
         if (isset($arrUrl[0]) && $arrUrl[0] == 'admin') {
-            $this->controler = $arrUrl[1] ? $arrUrl[1] : $this->controler;
-            $this->action = $arrUrl[2] ? $arrUrl[2] : $this->action;
+            $this->controler = isset($arrUrl[1]) ? $arrUrl[1] : $this->controler;
+            $this->action = isset($arrUrl[2]) ? $arrUrl[2] : $this->action;
             $this->params = $this->handlParams($arrUrl, 3);
             $this->handlAdmin();
         } else {
@@ -43,9 +43,7 @@ class Router
 
     function handlAdmin()
     {
-        echo "controler la: " . $this->controler . "<br>";
-        echo "action la: " . $this->action . "<br>";
-        print_r($this->params);
+        new \Cores\App($this->controler, $this->action, $this->params, 1);
     }
 
     function handlParams($arrUrl, $num)

@@ -24,6 +24,8 @@ $dotenv->load();
 
 new Cores\Router();
 
+// session_unset();
+// session_destroy();
 
 
 

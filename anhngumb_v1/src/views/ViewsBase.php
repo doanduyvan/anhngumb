@@ -8,7 +8,7 @@ class ViewsBase
     protected $arrCSS = [];
     protected $arrJS = [];
 
-    function renderCSS(){
+    protected function renderCSS(){
         foreach($this->arrCSS as $css){
             ?>
             <link rel="stylesheet" href="<?= $css ?>">
@@ -16,7 +16,7 @@ class ViewsBase
         }
     }
 
-    function renderJS(){
+    protected function renderJS(){
         foreach($this->arrJS as $js){
             ?>
             <script src="<?= $js ?>"></script>

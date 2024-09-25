@@ -6,7 +6,8 @@ class Routers{
 
     static function routersAdmin(){
         return [
-            'dashboard' => ['index']
+            'dashboard' => ['index'],
+            'courses' => ['index'],
         ];
     }
 

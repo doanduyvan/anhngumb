@@ -38,14 +38,8 @@ class LoginController
         $login = new \Views\viewsAuth\ViewLogin();
         $login->setTitle("Login - Anh ngữ MB");
         $login->addCSS("public/css/login.css");
-        $login->addJS("public/js/allapp.js");
         $login->addJS("public/js/login.js");
         $login->render();
-    }
-
-    function signin($data) {
-        array_push($data, "day la sign in thanh cong");
-        echo json_encode($data);
     }
 
     function signup($data) {
@@ -53,7 +47,15 @@ class LoginController
         echo json_encode($data);
     }
 
+    function signin($data) {
+        array_push($data, "day la sign in thanh cong");
+        echo json_encode($data);
+    }
+
+
+
     function signinGoogle($data) {
+
         $auth = new Authentication();
         $token = $data['idToken'];
         $payload = $auth->verifyIdTokenGoogle($data['idToken']);

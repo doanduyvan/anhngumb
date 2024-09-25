@@ -73,7 +73,7 @@ formSignUp.addEventListener('submit', (e) => {
 });
 
 function sendSignUp(email,password){
-    fetch('?signup',{
+    const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -82,18 +82,22 @@ function sendSignUp(email,password){
             email: email,
             password: password
         })
-    })
-    .then(res => res.json())
-    .then(data => {
+    }
+    myFetch('?signup',data => {
+        if(data.error){
+            showNotif('Error',data.error,2,2000);
+            return;
+        }
         console.log(data);
-    })
-    .catch(err => {
-        console.log(err);
-    })
+        formSignUp.reset();
+        changeAuth(0);
+        showNotif('Success','Sign up success',0,2500);
+    },options);
 }
 
+
 function sendSignIn(email,password){
-    fetch('?signin',{
+    const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -102,19 +106,34 @@ function sendSignIn(email,password){
             email: email,
             password: password
         })
-    })
+    };
+    myFetch('?signin',data => {
+        if(data.error){
+            showNotif('Error',data.error,2,2000);
+            return;
+        }
+        console.log(data);
+        formSignIn.reset();
+        showNotif('Success','Sign in success',0,2500);
+    },options);
+}
+
+function myFetch(url,callback,options = {}){
+    loading(true);
+    fetch(url,options)
     .then(res => res.json())
     .then(data => {
-        console.log(data);
+        loading(false);
+        callback(data);
     })
     .catch(err => {
-        console.log(err);
+        loading(false);
+        console.error("My Error: " + err);
     })
 }
 
 function sendSignInGoogle(id_token){
-    loading(true);
-    fetch('?signin&google',{
+    const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -122,19 +141,17 @@ function sendSignInGoogle(id_token){
         body: JSON.stringify({
             idToken: id_token
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        loading(false);
+    }
+    myFetch('?signin&google',data => {
+        if(data.error){
+            showNotif('Error',data.error,2,2000);
+            return;
+        }
         console.log(data);
-    })
-    .catch(err => {
-        loading(false);
-        console.log(err);
-    })
+        showNotif('Success','Sign in success',0,2500);
+    },options);
 }
 
-// sendSignInGoogle('123');
 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
