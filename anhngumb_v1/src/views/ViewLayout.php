@@ -9,6 +9,11 @@ class ViewLayout extends ViewsBase
     private $role = 0;
     private $page = '';
 
+    function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
     function setRole($userName, $role)
     {
         $this->userName = $userName;
@@ -27,10 +32,7 @@ class ViewLayout extends ViewsBase
         $this->page = $page;
     }
 
-    function setTitle($title)
-    {
-        $this->title = $title;
-    }
+
 
     function addCSS($css)
     {
@@ -68,7 +70,6 @@ class ViewLayout extends ViewsBase
         }
     }
     // 0: student; 1: teacher; 2: admin
-    private function renderRoot() {}
 
     private function menuStudent()
     {
@@ -211,7 +212,7 @@ class ViewLayout extends ViewsBase
                 </aside>
                 <main class="main flex-1 py-0 px-[0px] md:p-[0px]">
                     <div id="root">
-                        <?= $this->renderRoot() ?>
+                        
                     </div>
                 </main>
             </div>

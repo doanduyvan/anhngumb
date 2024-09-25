@@ -35,7 +35,8 @@ private $action = 'index';
             $this->render404();
         }
         if(Authentication::isLogin()){
-            echo "da login";
+            // echo "da login";
+        new \Cores\App($this->controler, $this->action, $this->params, 1);
         }else{
            $Clogin = new \Controllers\LoginController();
         }

@@ -1,11 +1,12 @@
 <?php
 namespace Cores;
+
 class App{
     function __construct($controller,$action,$params = [],$role)
     {
         $controller = ucfirst($controller).'Controller';
         $nameSpace = '';
-        if($role == 1){
+        if($role == 1 || $role == 2){
             $nameSpace = 'AdminControllers\\'.$controller . 'Admin';
         }else{
             $nameSpace = 'Controllers\\'.$controller;
@@ -14,8 +15,6 @@ class App{
     }
 
     function run($nameSpace,$action,$params = []){
-
-
         try{
             if(!class_exists($nameSpace)){
                 throw new \Exception('Không tìm thấy class');
