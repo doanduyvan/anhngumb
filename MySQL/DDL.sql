@@ -79,14 +79,3 @@ create table accounts_classes(
     foreign key(idAccounts) references accounts(id) on delete cascade,
     foreign key(idClasses) references classes(id) on delete cascade
 );
-
-
-
-
-
-
-
-
-
-
-

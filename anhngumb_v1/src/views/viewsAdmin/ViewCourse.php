@@ -10,7 +10,7 @@ class ViewCourse extends \Views\ViewLayout
      function renderRoot()
      {
         return "
-            <h1>Course</h1>
+            <h1>hohoohoho</h1>
         ";
      }
  }
