@@ -8,13 +8,11 @@ class DashboardControllerAdmin{
         $dashboard->setTitle('day la trang dashboard');
         $dashboard->setRole('ngọc tam',2);
         $dashboard->setPage(('Dashboard'));
-
         // set CSS 
         $dashboard->addCSS('public/css/style.css');
         $dashboard->addCSS('public/css/dashboard.css');
         $dashboard->addCSS('public/css/course.css');
         // set js 
-        $dashboard->addJS('public/js/main.js');
         $dashboard->addJS('public/js/dashboard.js');
         $dashboard->render();
     }

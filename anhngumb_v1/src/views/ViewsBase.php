@@ -19,9 +19,13 @@ class ViewsBase
     protected function renderJS(){
         foreach($this->arrJS as $js){
             ?>
-            <script src="<?= $js ?>"></script>
+            <script type="module" src="<?= $js ?>"></script>
             <?php
         }
+    }
+
+    protected function moduleJS(){
+
     }
 
     function renderBody(){
@@ -42,6 +46,7 @@ class ViewsBase
         </head>
         <body>
             <?= $this->renderBody() ?>
+            <?= $this->moduleJS() ?>
             <?= $this->renderJS() ?>
         </body>
         </html>

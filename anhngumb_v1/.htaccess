@@ -17,3 +17,5 @@ RewriteCond %{REQUEST_FILENAME} !-l
 RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 
 # nếu là src thì chuyển hướng vì src là thư mục có thật
+
+AddType application/javascript .js

@@ -1,8 +1,10 @@
+
+
+
 const divRoot = document.getElementById('root');
 function baselayout(){
     return `
            <div class="content">
-
                             <div class="addCourse show">
                                 <button class="btn btn-primary btn-addCourse">Add Course</button>
                                 <div class="addCourse-box">

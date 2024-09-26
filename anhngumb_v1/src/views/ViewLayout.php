@@ -154,6 +154,13 @@ class ViewLayout extends ViewsBase
         ];
     }
 
+    function moduleJS()
+    {
+        ?>
+        <script type="module" src="public/js/allmodule.js"></script>
+        <?php
+    }
+
 
 
     function renderBody()
