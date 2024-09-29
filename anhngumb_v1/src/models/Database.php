@@ -1,29 +1,33 @@
 <?php
 namespace Models;
-use PDO;
-class Database{
-    private $host = 'localhost';
-    private $user = 'root';
-    private $password = '';
-    private $database = 'mvc';
-    private $conn = null;
-    function __construct()
-    {
-        try{
-            $this->conn = new PDO("mysql:host=$this->host;dbname=$this->database", $this->user, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }catch(\PDOException $e){
-            echo "<h2 style='color:red'> Connection failed: " . $e->getMessage() . "</h2>";
-            die();
+
+use mysqli;
+use Dotenv\Dotenv;
+
+class Database {
+    private static $instance = null;
+    private $connection;
+
+    private function __construct() {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../'); // Đảm bảo đường dẫn đúng đến thư mục chứa .env
+        $dotenv->load();
+
+        $dbHost = $_ENV['DB_HOST'];
+        $dbUsername = $_ENV['DB_USERNAME'];
+        $dbPassword = $_ENV['DB_PASSWORD'];
+        $dbDatabase = $_ENV['DB_DATABASE'];
+
+        $this->connection = new mysqli($dbHost, $dbUsername, $dbPassword, $dbDatabase);
+
+        if ($this->connection->connect_error) {
+            die("Kết nối thất bại: " . $this->connection->connect_error);
         }
     }
 
-    function getConn(){
-        return $this->conn;
-    }
-
-    function close()
-    {
-        $this->conn = null;
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new Database();
+        }
+        return self::$instance->connection;
     }
 }

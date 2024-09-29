@@ -2,17 +2,17 @@ const divRoot = document.getElementById('root');
 function baselayout(){
     return `
            <div class="content">
-
+                            <h3 id="message" style="color: red"></h3>
                             <div class="addCourse show">
                                 <button class="btn btn-primary btn-addCourse">Add Course</button>
                                 <div class="addCourse-box">
-                                    <form action="" class="addCourse-form">
+                                    <form action="" id="courseForm" class="addCourse-form">
                                         <div class="fromGroup">
                                             <label for="courseName" class="formLabel">Course Name</label>
                                             <input type="text" id="courseName" name="courseName" class="formInput" placeholder="Enter course name">
                                         </div>
                                         <div>
-                                            <button class="btn btn-primary">Add</button>
+                                            <button type="submit" class="btn btn-primary">Add</button>
                                         </div>
                                     </form>
                                     <button class="addCourse-box-btn-close">⬆️</button>
@@ -127,48 +127,72 @@ function renderCourse(courses = []){
     });
 }
 
-renderCourse(getCourse());
+// renderCourse(getCourse());
 
 
-const addCourseForm = document.querySelector('.addCourse-form');
-addCourseForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    const formData = new FormData(addCourseForm);
-    const courseName = formData.get('courseName');
-    // addCourse(courseName);
-    getcourse();
+// const addCourseForm = document.querySelector('.addCourse-form');
+// addCourseForm.addEventListener('submit', function(e){
+//     e.preventDefault();
+//     const formData = new FormData(addCourseForm);
+//     const courseName = formData.get('courseName');
+//     // addCourse(courseName);
+//     getcourse();
+// });
+
+
+
+// function addCourse(courseName){
+//     $options = {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({courseName})
+//     };
+
+//     fetch('', $options)
+// }
+
+
+// function getcourse(){
+//     fetch('admin/dashboard/getcourse')
+//     .then(res => res.json())
+//     .then(data => {
+//         console.log(data);
+//     })
+// }
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('courseForm');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Ngăn chặn việc gửi form mặc định
+
+        const formData = new FormData(form);
+
+        // Gửi yêu cầu AJAX
+        fetch('admin/dashboard/addcourse', {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Kiểm tra phản hồi từ server
+            const message = document.getElementById('message');
+            message.innerHTML = data;
+                form.reset();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const message = document.getElementById('message');
+            message.innerHTML = 'Có lỗi xảy ra khi thêm khóa học.';
+        });
+    });
 });
-
-
-
-function addCourse(courseName){
-    $options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({courseName})
-    };
-
-    fetch('', $options)
-}
-
-
-function getcourse(){
-    fetch('admin/dashboard/getcourse')
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-    })
-}
-
-
-
-
-
-
-
-
 
 
 

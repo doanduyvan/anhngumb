@@ -1,12 +1,26 @@
 <?php
+
 namespace AdminControllers;
 
-class DashboardControllerAdmin{
+use Models\Database;
+use Models\CourseModels;
 
-    function index(){
-        $dashboard = new \Views\ViewLayout(); 
+class DashboardControllerAdmin
+{
+
+    private $courseModel;
+
+    public function __construct(CourseModels $courseModel)
+    {
+        $this->courseModel = $courseModel;
+    }
+
+
+    function index()
+    {
+        $dashboard = new \Views\ViewLayout();
         $dashboard->setTitle('day la trang dashboard');
-        $dashboard->setRole('ngọc tam',2);
+        $dashboard->setRole('ngọc tam', 2);
         $dashboard->setPage(('Dashboard'));
 
         // set CSS 
@@ -19,38 +33,20 @@ class DashboardControllerAdmin{
         $dashboard->render();
     }
 
-    function concuadashboar(){
+    function concuadashboar()
+    {
         echo 'day la trang con cua  dashboard';
     }
 
-    // Dưới đây là các phương thức dành cho JSON API
 
-
-    function getcourse(){
-
-        $course = [
-            [
-                'id' => 1,
-                'name' => 'Lập trình PHP',
-                'description' => 'Học lập trình PHP cơ bản',
-                'price' => 1000000
-            ],
-            [
-                'id' => 1,
-                'name' => 'Lập trình java',
-                'description' => 'Học lập trình PHP cơ bản',
-                'price' => 1000000
-            ],
-            [
-                'id' => 1,
-                'name' => 'Lập trình python',
-                'description' => 'Học lập trình PHP cơ bản',
-                'price' => 1000000
-            ],
-        ];
-        echo json_encode($course);
+    public function addcourse()
+    {
+        if (isset($_POST['courseName'])) {
+            $courseName = $_POST['courseName'];
+            $result = $this->courseModel->addCourse($courseName);
+            echo $result;
+        } else {
+            echo "Không có dữ liệu khóa học để thêm.";
+        }
     }
-
-
-
 }
