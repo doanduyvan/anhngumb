@@ -85,9 +85,9 @@ create table accounts_classes(
 create table resultsCMS(
 	id int unsigned primary key auto_increment,
     score float,
-    idAccounts int,
-    idQuizzesCMS int,
-    idClasses int, 
+    idAccounts int unsigned,
+    idQuizzesCMS int unsigned,
+    idClasses int unsigned, 
     foreign key(idAccounts) references accounts(id) on delete cascade,
     foreign key(idQuizzesCMS) references quizzesCMS(id) on delete cascade,
     foreign key(idClasses) references classes(id) on delete cascade
@@ -96,7 +96,13 @@ create table resultsCMS(
 create table results_details_CMS(
 id int unsigned primary key auto_increment,
 userAnswer varchar(255),
-isCorrect Boolean
+isCorrect Boolean default false,
+idResultsCMS int unsigned,
+idQuestionsCMS int unsigned,
+idAnswersCMS int unsigned,
+foreign key(idResultsCMS) references resultsCMS(id) on delete cascade,
+foreign key(idQuestionsCMS) references questionsCMS(id) on delete cascade,
+foreign key(idAnswersCMS) references answersCMS(id) on delete cascade
 );
 
 
