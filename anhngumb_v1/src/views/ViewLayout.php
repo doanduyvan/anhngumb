@@ -12,7 +12,7 @@ class ViewLayout extends ViewsBase
     private $linkImg = 'public/img/default_profile.jpg';
 
 
-    function __construct($userName, $role = 0)
+    function __construct($userName, $role)
     {
         $this->role = $role;
         $this->userName = $userName;
@@ -82,7 +82,18 @@ class ViewLayout extends ViewsBase
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
                 'link' => 'classes',
-                'submenu' => null
+                'submenu' => [
+                    [
+                        'id' => 2.1,
+                        'name' => 'Class 1',
+                        'link' => '#'
+                    ],
+                    [
+                        'id' => 2.2,
+                        'name' => 'Class 2',
+                        'link' => '#'
+                    ]
+                ]
             ],
             [
                 'id' => 3,

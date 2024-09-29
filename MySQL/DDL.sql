@@ -11,9 +11,10 @@ create table accounts(
 	id int unsigned primary key auto_increment,
     fullName varchar(50),
     email varchar(100) unique,
-    password varchar(50),
-    role TINYINT unsigned,
-    createdAt timestamp default current_timestamp
+    pass varchar(50),
+    roles TINYINT unsigned,
+    createdAt timestamp default current_timestamp,
+    statuss tinyint unsigned
 );
 
 create table courses(
@@ -75,7 +76,36 @@ create table classes(
 create table accounts_classes(
 	idAccounts int unsigned,
     idClasses int unsigned,
+    statuss tinyint,
     primary key(idAccounts,idClasses),
     foreign key(idAccounts) references accounts(id) on delete cascade,
     foreign key(idClasses) references classes(id) on delete cascade
 );
+
+create table resultsCMS(
+	id int unsigned primary key auto_increment,
+    score float,
+    idAccounts int,
+    idQuizzesCMS int,
+    idClasses int, 
+    foreign key(idAccounts) references accounts(id) on delete cascade,
+    foreign key(idQuizzesCMS) references quizzesCMS(id) on delete cascade,
+    foreign key(idClasses) references classes(id) on delete cascade
+);
+
+create table results_details_CMS(
+id int unsigned primary key auto_increment,
+userAnswer varchar(255),
+isCorrect Boolean
+);
+
+
+
+
+
+
+
+
+
+
+
