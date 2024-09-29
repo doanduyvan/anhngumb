@@ -24,10 +24,6 @@ class ViewsBase
         }
     }
 
-    protected function moduleJS(){
-
-    }
-
     function renderBody(){
         
     }
@@ -46,7 +42,6 @@ class ViewsBase
         </head>
         <body>
             <?= $this->renderBody() ?>
-            <?= $this->moduleJS() ?>
             <?= $this->renderJS() ?>
         </body>
         </html>
