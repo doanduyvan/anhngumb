@@ -8,7 +8,8 @@ class Router
 {
 
     private $controler = 'dashboard';
-    private $action = 'index';
+private $action = 'index';
+
     private $params = [];
 
     function __construct()
