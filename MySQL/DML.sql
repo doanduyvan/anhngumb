@@ -1,1 +1,1 @@
-insert into course(namg) value ('tam');
+-- insert into course(namg) value ('tam');
