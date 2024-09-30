@@ -1,5 +1,5 @@
 
-
+// tite:, mess: nội dung thong báo, type: 1 thành thành công, 2 thất bại, 3 cảnh báo, 4 info
 function mbNotification(title = 'Nhập tiêu đề thông báo.', mess = 'Nhập nội dung thông báo.', type = 2, time = 1.5){
     let bodynotificationall = document.querySelector('.body-notification-all');
     if(!bodynotificationall){
