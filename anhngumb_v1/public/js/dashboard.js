@@ -84,34 +84,16 @@ divRoot.innerHTML = baselayout();
 
 
 
-const courses = [
-    {
-        id: 1,
-        courseName: 'Course 1',
-        createdAt: '2021-09-09'
-    },
-    {
-        id: 2,
-        courseName: 'Course 2',
-        createdAt: '2021-09-09'
-    },
-    {
-        id: 3,
-        courseName: 'Course 3',
-        createdAt: '2021-09-09'
-    }
-];
-
-function getCourse(){
- return courses;
-}
 
 
-function renderCourse(courses = []){
-    const contentcourse = document.getElementById('content-course');
-    contentcourse.innerHTML = '';
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('admin/dashboard/getcourses')
+    .then(response => response.json())
+    .then(data => {
+        const contentcourse = document.getElementById('content-course');
+        contentcourse.innerHTML = '';
 
-    courses.forEach(item => {
+        data.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${item.courseName}</td>
@@ -125,42 +107,9 @@ function renderCourse(courses = []){
         `;
         contentcourse.appendChild(tr);
     });
-}
-
-// renderCourse(getCourse());
-
-
-// const addCourseForm = document.querySelector('.addCourse-form');
-// addCourseForm.addEventListener('submit', function(e){
-//     e.preventDefault();
-//     const formData = new FormData(addCourseForm);
-//     const courseName = formData.get('courseName');
-//     // addCourse(courseName);
-//     getcourse();
-// });
-
-
-
-// function addCourse(courseName){
-//     $options = {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({courseName})
-//     };
-
-//     fetch('', $options)
-// }
-
-
-// function getcourse(){
-//     fetch('admin/dashboard/getcourse')
-//     .then(res => res.json())
-//     .then(data => {
-//         console.log(data);
-//     })
-// }
+    })
+    .catch(error => console.error('Error:', error));
+});
 
 
 
@@ -179,19 +128,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            console.log(data); // Kiểm tra phản hồi từ server
-            const message = document.getElementById('message');
-            message.innerHTML = data;
-                form.reset();
+            if (data.success) {
+                // Thêm khóa học mới vào bảng mà không tải lại trang
+                const contentcourse = document.getElementById('content-course');
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${data.course.courseName}</td>
+                    <td>${data.course.createdAt}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-primary">Edit</button>
+                            <button class="btn btn-danger">Delete</button>
+                        </div>
+                    </td>
+                `;
+                // Kiểm tra số lượng dòng hiện có trong bảng
+                const rows = contentcourse.getElementsByTagName('tr');
+                if (rows.length >= 5) {
+                    contentcourse.removeChild(rows[rows.length - 1]);
+                }
+                contentcourse.insertBefore(tr, contentcourse.firstChild);
+                document.getElementById('courseName').value = '';
+            }else {
+                console.error('Error:', data.message);
+            }
+            
         })
-        .catch(error => {
-            console.error('Error:', error);
-            const message = document.getElementById('message');
-            message.innerHTML = 'Có lỗi xảy ra khi thêm khóa học.';
+            .catch(error => console.error('Error:', error));
         });
-    });
 });
 
 

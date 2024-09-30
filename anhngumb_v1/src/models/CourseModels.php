@@ -20,12 +20,37 @@ class CourseModels{
         $stmt->bind_param("s", $courseName);
 
         if ($stmt->execute()) {
-            echo "Thêm khóa học thành công";
+            $courseId = $this->mysqli->insert_id; // Lấy ID của khóa học mới thêm
+            $stmt->close();
+            return $courseId;
         } else {
-            echo "Lỗi: " . $stmt->error;
+            $stmt->close();
+            return false;
         }
         
+    }
+    public function getCourseById($courseId){
+        $sql = "SELECT * FROM courses WHERE id = ?";
+        $stmt = $this->mysqli->prepare($sql);
+        if ($stmt === false) {
+            die("Lỗi khi chuẩn bị câu truy vấn: " . $this->mysqli->error);
+        }
+
+        $stmt->bind_param("i", $courseId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $course = $result->fetch_assoc();
         $stmt->close();
+        return $course;
+    }
+    public function getCourses(){
+        
+        $sql = "SELECT * FROM courses ORDER BY id DESC limit 5";
+        $result = $this->mysqli->query($sql);
+        if($result === false){
+            return [];
+        }
+        return $result;
     }
 }
 ?>

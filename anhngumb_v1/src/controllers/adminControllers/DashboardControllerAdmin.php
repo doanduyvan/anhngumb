@@ -35,7 +35,7 @@ class DashboardControllerAdmin
 
     function concuadashboar()
     {
-        echo 'day la trang con cua  dashboard';
+        echo 'day la trang con cua dashboard';
     }
 
 
@@ -44,9 +44,25 @@ class DashboardControllerAdmin
         if (isset($_POST['courseName'])) {
             $courseName = $_POST['courseName'];
             $result = $this->courseModel->addCourse($courseName);
-            echo $result;
+            if ($result) {
+                // Giả sử phương thức addCourse trả về thông tin khóa học mới thêm
+                $newCourse = $this->courseModel->getCourseById($result); // Lấy thông tin khóa học mới thêm
+                echo json_encode(['success' => true, 'message' => 'Thêm dữ liệu khóa học thành công', 'course' => $newCourse]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Không thêm được khóa học']);
+            }
         } else {
-            echo "Không có dữ liệu khóa học để thêm.";
+            echo json_encode(['success' => false, 'message' => 'Không có dữ liệu khóa học']);
         }
+    }
+
+    public function getcourses()
+    {
+        $courses = $this->courseModel->getCourses();
+        $courseArray = [];
+        while ($course = $courses->fetch_assoc()) {
+            $courseArray[] = $course;
+        }
+        echo json_encode($courseArray);
     }
 }
