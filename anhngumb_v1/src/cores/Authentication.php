@@ -44,7 +44,7 @@ class Authentication{
         $headers = getallheaders();
         if(isset($headers['Authorization'])){
            $token = $headers['Authorization'];
-           $userData = self::verifyToken($token);
+           $userData = $this->verifyToken($token);
            if($userData){
             //    $_SESSION['acc'] = $userData;
                return true;

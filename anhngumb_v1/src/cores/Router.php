@@ -9,6 +9,7 @@ class Router
 
     private $controler = 'dashboard';
     private $action = 'index';
+
     private $params = [];
 
     function __construct()
@@ -29,16 +30,16 @@ class Router
 
 
     function hanldUser() {
-        $auth = new Authentication();
-        if(!$this->isRouters()) {
-            $this->render404();
-        }
-        if(Authentication::isLogin()){
-            echo "da login";
-        }else{
-           $Clogin = new \Controllers\LoginController();
-        }
-
+        // $auth = new Authentication();
+        // if(!$this->isRouters()) {
+        //     $this->render404();
+        // }
+        // if(Authentication::isLogin()){
+        // new \Cores\App($this->controler, $this->action, $this->params, 1);
+        // }else{
+        //    $Clogin = new \Controllers\LoginController();
+        // }
+        new \Cores\App($this->controler, $this->action, $this->params, 0);
     }
 
     function handlAdmin()
