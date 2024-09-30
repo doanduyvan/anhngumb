@@ -16,6 +16,10 @@ class ViewsBase
         }
     }
 
+    protected function renderModuleJS(){
+
+    }
+
     protected function renderJS(){
         foreach($this->arrJS as $js){
             ?>
@@ -39,6 +43,7 @@ class ViewsBase
             <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
             <title><?= $this->title ?></title>
             <?= $this->renderCSS() ?>
+            <?= $this->renderModuleJS() ?>
         </head>
         <body>
             <?= $this->renderBody() ?>

@@ -10,7 +10,7 @@ class ViewLayout extends ViewsBase
     private $idParentPage;
     private $idChildPage = null;
     private $linkImg = 'public/img/default_profile.jpg';
-
+    public $templatehtml = '';
 
     function __construct($userName, $role)
     {
@@ -18,7 +18,6 @@ class ViewLayout extends ViewsBase
         $this->userName = $userName;
         $this->setRoleName();
         $this->addCSS('public/css/style.css');
-        $this->addJS('public/js/allmodule.js');
         if ($this->role == 1 || $this->role == 2) {
             $this->addJS('public/js/Admin/mainAdmin.js');
         } else {
@@ -53,6 +52,7 @@ class ViewLayout extends ViewsBase
     {
         $this->arrJS[] = $js;
     }
+
 
     // Duoiws đây là phần mặc định của layout, không cần gọi ra
 
@@ -117,9 +117,16 @@ class ViewLayout extends ViewsBase
         return [
             [
                 'id' => 1,
-                'name' => 'Dashboard Admin',
+                'name' => 'Dashboard',
                 'svg' => file_get_contents("public/svgs/dashboard.svg"),
                 'link' => 'dashboard',
+                'submenu' => null
+            ],
+            [
+                'id' => 6,
+                'name' => 'Courses',
+                'svg' => file_get_contents("public/svgs/course.svg"),
+                'link' => 'admin/courses',
                 'submenu' => null
             ],
             [
@@ -127,14 +134,18 @@ class ViewLayout extends ViewsBase
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
                 'link' => 'classes',
-                'submenu' => null
-            ],
-            [
-                'id' => 3,
-                'name' => 'Course',
-                'svg' => file_get_contents("public/svgs/class.svg"),
-                'link' => 'classes',
-                'submenu' => null
+                'submenu' => [
+                    [
+                        'id' => 2.1,
+                        'name' => 'Add Class',
+                        'link' => '#'
+                    ],
+                    [
+                        'id' => 2.2,
+                        'name' => 'List Class',
+                        'link' => '#'
+                    ]
+                ]
             ],
             [
                 'id' => 4,
@@ -216,6 +227,13 @@ class ViewLayout extends ViewsBase
         }
     }
 
+    function renderModuleJS(){
+        ?>
+        <script type="module" src="public/js/allmodule.js"></script>
+        <?php
+    }
+
+
     private function setRoleName()
     {
         if ($this->role == 0) {
@@ -290,7 +308,7 @@ class ViewLayout extends ViewsBase
                     </label>
                 </aside>
                 <main class="main flex-1 py-0 px-[0px] md:p-[0px]">
-                    <div id="root"></div>
+                    <div id="root"> <?= $this->templatehtml ?> </div>
                 </main>
             </div>
         </div>
