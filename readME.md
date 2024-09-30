@@ -11,3 +11,5 @@ các file mặc định như style.css và allmodule.js , mainAdmin.js, mainUser
     + Hiển thị ô xác nhận
     + trạng thái loading
     + gửi yêu cầu lên server để lấy dữ liệu
+
+* day la update develop
