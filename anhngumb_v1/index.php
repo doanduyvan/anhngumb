@@ -22,11 +22,11 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// new Cores\Router();
+new Cores\Router();
 // new \Models\BaseModel();
-new \Models\AccountModel();
+// new \Models\AccountModel();
 
-
+// $courses = new \Models\CourseModel();
 
 
 

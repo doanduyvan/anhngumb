@@ -205,3 +205,72 @@ function mbFetch(url, data = null){
 }
 
 export {mbFetch};
+
+
+
+// truyền vào trang hiện tại, và tổng trang được lấy từ trên server về, số nút hiển thị mặc định là 5,
+// chỉ cần tạo trước một thẻ div, và appendChild vào nó, vì hàm này return về 1 DOM ul
+function mbPagination(currentPage, totalPages, maxbutton = 5){
+    const ul = document.createElement('ul');
+    ul.classList.add('mb-pagination');
+    let startPage, endPage;
+    if(totalPages <= maxbutton){
+        startPage = 1;
+        endPage = totalPages;
+    }else{
+        const halfRange = Math.floor(maxbutton / 2);
+        if(currentPage <= halfRange + 1){
+            startPage = 1;
+            endPage = maxbutton;
+        }
+        else if(currentPage + halfRange >= totalPages){
+            startPage = totalPages - maxbutton + 1;
+            endPage = totalPages;
+        }else{
+            startPage = currentPage - halfRange;
+            endPage = currentPage + halfRange;
+        }
+    }
+    if (startPage > 1) {
+        // Tạo phần tử <li> cho trang đầu tiên với giá trị 1
+        ul.innerHTML += `<li><a href="#" data-page="1">1</a></li>`;
+        
+        // Nếu trang hiện tại cách xa trang đầu tiên, thêm dấu "..." để biểu thị khoảng cách
+        if (startPage > 2) {
+            ul.innerHTML += `<li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="15" height="15">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+                </svg>
+                </li>`;
+        }
+    }
+    for (let i = startPage; i <= endPage; i++) {
+        // Thêm các trang vào <ul> và đánh dấu trang hiện tại (active) nếu đúng với currentPage
+        ul.innerHTML += `<li><a href="#" data-page="${i}" class="${i === currentPage ? 'active' : ''}">${i}</a></li>`;
+    }
+    if (endPage < totalPages) {
+        // Nếu trang hiện tại cách xa trang cuối, thêm dấu "..." để biểu thị khoảng cách
+        if (endPage < totalPages - 1) {
+            ul.innerHTML += `<li>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="15" height="15">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+            </svg>
+            </li>`;
+        }
+        // Tạo phần tử <li> cho trang cuối cùng với giá trị của totalPages
+        ul.innerHTML += `<li><a href="#" data-page="${totalPages}">${totalPages}</a></li>`;
+    }
+    return ul;
+}
+
+export {mbPagination};
+
+
+// ví dụ khi muốn dùng, đó là lấy DOM truyền vào => const form = document.querySelector('.form-course');
+function mbFormData(form) {
+    const formData = new FormData(form);
+    const formObject = Object.fromEntries(formData.entries());
+    return formObject;
+}
+
+export {mbFormData};
