@@ -1,6 +1,7 @@
 <?php
 namespace Models;
-class AccountModel extends BaseModel{
+class AccountModel{
+    private $conn = null;
     private $id;
     private $name;
     private $role;
@@ -15,49 +16,28 @@ class AccountModel extends BaseModel{
 
     public function __construct()
     {
-        // parent::__construct();
-        // $this->table = 'accounts';
+        $this->conn = BaseModel::getInstance();
+        $sql = "select * from accounts";
+        
+        $result = $this->conn->query($sql);
+        $data = $result->fetch_all(MYSQLI_ASSOC);
 
-        $exampleDataExam = [
-            'title' => 'English1.1',
-            'idLesson' => 1,
-            'QuestionCMS' => [
-                [
-                    'questionName' => 'What is your name?',
-                    'typeAnswer' => 1,
-                    'idQuizCMS' => 1,
-                    'answersCMS' => [
-                        [
-                            'answerName' => 'my name is anh',
-                            'isCorrect' => false,
-                            'idQuestionCMS' => 1
-                        ],
-                        [
-                            'answerName' => 'my name is anh',
-                            'isCorrect' => false,
-                            'idQuestionCMS' => 1
-                        ]
-                    ]
-                ],
-                [
-                    'questionName' => 'who are you?',
-                    'typeAnswer' => 2,
-                    'idQuizCMS' => 2,
-                    'answersCMS' => [
-                        [
-                            'answerName' => 'my name is anh',
-                            'isCorrect' => false,
-                            'idQuestionCMS' => 2
-                        ],
-                        [
-                            'answerName' => 'my name is anh',
-                            'isCorrect' => false,
-                            'idQuestionCMS' => 2
-                        ]
-                    ]
-                ]
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
 
-            ]
-        ];
+        // $datatemp = [
+        //     'title' => 'kiem tra giua ki',
+        //     'idlesson' => 1,
+        //     'QuestionCMS' => [
+        //         'questionName' => 'Câu hỏi 1',
+        //         'typeAnswer' => 1,
+        //         'answers' => [
+        //             ''
+        //         ]
+        //     ]
+        // ]
+
     }
+
 }

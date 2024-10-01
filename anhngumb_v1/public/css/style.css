@@ -1285,10 +1285,11 @@ body {
 /* css cho thông báo */
 
 .mbConfirm1 .confirm-fixed{
-  background-color: rgba(225, 225, 225,0.4);
+  background-color: rgba(163, 163, 163, 0.4);
   -webkit-backdrop-filter: blur(2px);
-          backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
   z-index: 10;
+  padding: 30px;
   animation: confirmfixedFadeIn 0.2s ease-in-out;
 }
 
@@ -1298,6 +1299,8 @@ body {
   animation: confirmboxFadeIn 0.2s ease-in-out;
   border-radius: 13px;
   overflow: hidden;
+  max-width: 600px;
+  min-width: 200px;
 }
 
 @keyframes confirmfixedFadeIn{
@@ -1455,13 +1458,15 @@ body {
   position: fixed;
   inset: 0;
   z-index: 50;
-  animation: mbLoadingFadeIn 0.1s ease-in-out;
+  animation: mbLoadingFadeIn 0.1s ease-in-out forwards 100ms;
+  opacity: 0;
 }
 .mbLoadingAbsolute{
   position: absolute;
   inset: 0;
   z-index: 50;
-  animation: mbLoadingFadeIn 0.1s ease-in-out;
+  animation: mbLoadingFadeIn 0.1s ease-in-out forwards 100ms;
+  opacity: 0;
 }
 .mbloadingoverflowhiddenandrelative{
   position: relative;
@@ -1599,3 +1604,44 @@ body {
 }
 
 /* end tag form */
+
+
+/* css cho pagination */
+
+.mb-pagination{
+  /* border: 1px solid #ccc; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.mb-pagination>li{
+ /* background-color: green; */
+}
+
+.mb-pagination>li>svg{
+  color: rgb(192, 192, 192);
+}
+
+.mb-pagination>li>a{
+  display: block;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: black;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease-in-out;
+  font-size: 16px;
+  border-radius: 4px 4px 0 0;
+  background-color: rgba(245, 245, 245,0.5);
+}
+.mb-pagination>li>a.active{
+  font-weight: bold;
+  border-bottom-color: var(--mb-primary-color);
+}
+
+.mb-pagination>li>a:hover{
+  background-color: #f1f1f1;
+  border-bottom-color: var(--mb-primary-color);
+
+}
