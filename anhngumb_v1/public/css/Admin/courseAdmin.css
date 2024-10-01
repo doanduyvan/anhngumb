@@ -106,36 +106,6 @@
     padding-bottom: 5px;
 }
 
-.dv-content .listCourse-pagination{
-    margin-top: 10px;
-}
-
-.dv-content .listCourse-pagination .listCourse-pagination-ul{
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-}
-
-.dv-content .listCourse-pagination .listCourse-pagination-ul li a{
-    display: block;
-    padding: 5px 10px;
-    /* background-color: #0056b3; */
-    color: black;
-    border-radius: 3px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: all 0.2s linear;
-}
-
-.dv-content .listCourse-pagination .listCourse-pagination-ul li a:hover{
-    background-color: #0056b3;
-    color: white;
-}
-
-.dv-content .listCourse-pagination .listCourse-pagination-ul li.active a{
-    background-color: #0056b3;
-    color: white;
-}
 
 .dv-content .listCourse .td-btn{
     display: flex;
@@ -179,4 +149,18 @@
 
 .dv-edit-course>form>button{
     margin-top: 10px;
+}
+
+/* css dành cho chuyển đổi số lượng item trên trang */
+.listCourse-pagination-container{
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.listCourse-pagination-container-select select{
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
 }
