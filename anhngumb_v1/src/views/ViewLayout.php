@@ -61,9 +61,9 @@ class ViewLayout extends ViewsBase
         return [
             [
                 'id' => 1,
-                'name' => 'Dashboard User',
+                'name' => 'Dashboard',
                 'svg' => file_get_contents("public/svgs/dashboard.svg"),
-                'link' => 'dashboard',
+                'link' => '',
                 'submenu' => [
                     [
                         'id' => 1.1,
@@ -81,7 +81,7 @@ class ViewLayout extends ViewsBase
                 'id' => 2,
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
-                'link' => 'classes',
+                'link' => '',
                 'submenu' => [
                     [
                         'id' => 2.1,
@@ -96,17 +96,35 @@ class ViewLayout extends ViewsBase
                 ]
             ],
             [
+                'id' => 5,
+                'name' => 'Quizzes',
+                'svg' => file_get_contents("public/svgs/quiz.svg"),
+                'link' => 'quizzes',
+                'submenu' => [
+                    [
+                        'id' => 5.1,
+                        'name' => 'Class 1',
+                        'link' => '#'
+                    ],
+                    [
+                        'id' => 5.2,
+                        'name' => 'Class 2',
+                        'link' => '#'
+                    ]
+                ]
+            ],
+            [
                 'id' => 3,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),
-                'link' => 'profile',
+                'link' => '',
                 'submenu' => null
             ],
             [
                 'id' => 4,
                 'name' => 'Log Out',
                 'svg' => file_get_contents("public/svgs/logout.svg"),
-                'link' => 'logout',
+                'link' => '',
                 'submenu' => null
             ]
         ];
