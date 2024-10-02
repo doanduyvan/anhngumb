@@ -14,7 +14,8 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
 } else {
     $web_root = 'http://' . $_SERVER['HTTP_HOST'];
 }
-$web_root .= '/' . implode("/",$arrPath) . "/" ;
+$stringPath = count($arrPath) > 0 ? implode("/",$arrPath) . "/" : "";
+$web_root .= '/' . $stringPath;
 define("WEB_ROOT", $web_root);
 
 include_once __DIR__ . '/vendor/autoload.php';
