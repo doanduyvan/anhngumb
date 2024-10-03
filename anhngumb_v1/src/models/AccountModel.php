@@ -1,8 +1,11 @@
 <?php
+
 namespace Models;
-class AccountModel{
+
+class AccountModel
+{
     private $conn = null;
-   private $table = 'accounts';
+    private $table = 'accounts';
     private $data = [
         'fullName' => null,
         'email' => null,
@@ -16,8 +19,37 @@ class AccountModel{
         $this->conn = BaseModel::getInstance();
     }
 
+    public function signinModel($data)
+    {
+        $email = $data['email'];
+        $pass = $data['password'];
+        $sql = "SELECT * FROM $this->table WHERE email = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            return [
+                'error' => 'Email does not exist'
+            ];
+        }
+        $row = $result->fetch_assoc();
+        if ($row['pass'] != $pass) {
+            return [
+                'error' => 'Password is incorrect'
+            ];
+        }
+        return [
+            'id' => $row['id'],
+            'fullName' => $row['fullName'],
+            'roles' => $row['roles'],
+            'statuss' => $row['statuss']
+        ];
+    }
 
-    public function addAccount($dataRow){
+
+    public function addAccount($dataRow)
+    {
         $fullName = $dataRow['fullName'];
         $email = $dataRow['email'];
         $pass = $dataRow['password'];
@@ -44,5 +76,4 @@ class AccountModel{
             }
         }
     }
-
 }

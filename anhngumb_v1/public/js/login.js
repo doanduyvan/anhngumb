@@ -46,21 +46,39 @@ const formSignUp = document.querySelector('#main-signup .form');
 
 // sử lí đăng nhập
 
-formSignIn.addEventListener('submit', (e) => {
+formSignIn.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = mbFormData(formSignIn);
-    console.log(formData);
-
-    return;
-    if (!validateEmail(email)) {
+    if (!validateEmail(formData.email)) {
         showNotif('Warning', 'Invalid email', 1);
         return;
     }
-    if (!validatePassword(password)) {
-        showNotif('Error', 'Password must be between 3 and 20 characters', 2);
+    if (!validatePassword(formData.password)) {
+        showNotif('Warning', 'Password must be between 3 and 20 characters', 1);
         return;
     }
-    sendSignIn(email,password);
+    for (let key in formData) {
+        formData[key] = formData[key].trim();
+    }
+
+    try{
+        loading(true);
+        const datares = await mbFetch('?signin', formData);
+        if(datares.error){
+            showNotif('Error', datares.error, 2, 2500);
+            return;
+        }
+        formSignIn.reset();
+        showNotif('Success', datares.message, 0, 1000);
+        console.log(datares);
+        // setTimeout(() => { window.location.reload() }, 1000);
+    }catch(error){
+        console.error(error);
+        showNotif('Error', 'Sign in fail', 2, 2000);
+    }finally{
+        loading(false);
+    }
+
 });
 
 // sử lí đăng kí

@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Cores\Authentication;
+use Google\Service\ServiceControl\Auth;
 
 class LoginController
 {
@@ -13,6 +14,7 @@ class LoginController
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
             $this->accountModel = new \Models\AccountModel();
+            $this->auth = new Authentication();
             if(isset($_GET['signin'])){
                 $this->signin($data);
                 return;
@@ -40,9 +42,30 @@ class LoginController
         $login->render();
     }
 
-    function signin($data) {
-        array_push($data, "day la sign in thanh cong");
+    function signin($datareq) {
+
+        $data = [
+            'message' => 'test success'
+        ];
+        if(isset($_COOKIE)){
+            $data['cookie'] = $_COOKIE;
+        }else{
+            $data['cookie'] = 'khong co cookie';
+        }
+
         echo json_encode($data);
+        return;
+        $dataResModel = $this->accountModel->signinModel($datareq);
+        if(isset($dataResModel['error'])){
+            echo json_encode($dataResModel);
+            return;
+        }
+        Authentication::setAccountSession($dataResModel);
+        if(isset($datareq['rememberMe'])){
+            $base46 = Authentication::encryption($dataResModel);
+            setcookie('user_token_mb', $base46, time() + 3600*24*90, '/');
+        }
+        echo json_encode(['message' => 'Login success']);
     }
 
     function signup($data) {

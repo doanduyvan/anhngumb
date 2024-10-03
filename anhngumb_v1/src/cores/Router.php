@@ -6,14 +6,14 @@ use Config\Routers;
 use Cores\Authentication;
 class Router
 {
-
+    private $auth = null;
     private $controler = 'dashboard';
     private $action = 'index';
-
     private $params = [];
 
     function __construct()
     {
+        $this->auth = new Authentication();
         $arrUrl = $this->UrlProcess();
         if (isset($arrUrl[0]) && $arrUrl[0] == 'admin') {
             $this->controler = isset($arrUrl[1]) ? $arrUrl[1] : $this->controler;
@@ -30,16 +30,15 @@ class Router
 
 
     function hanldUser() {
-        $auth = new Authentication();
         // if(!$this->isRouters()) {
         //     $this->render404();
         // }
-        // if(Authentication::isLogin()){
+        if(Authentication::isLoginSession()){
         // new \Cores\App($this->controler, $this->action, $this->params, 0);
-        // }else{
-        //    $Clogin = new \Controllers\LoginController();
-        // }
-        new \Cores\App($this->controler, $this->action, $this->params, 0);
+        }else{
+           $Clogin = new \Controllers\LoginController();
+        }
+        // new \Cores\App($this->controler, $this->action, $this->params, 0);
     }
 
     function handlAdmin()
