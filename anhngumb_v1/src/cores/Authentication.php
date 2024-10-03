@@ -76,6 +76,15 @@ class Authentication{
         //role 0: students, 1: instructor, 2: admin
     }
 
+    function encryption($arrAccount): string{
+        $serialized = serialize($arrAccount);
+        return base64_encode($serialized);
+    }
+    
+    function decryption($arrAccount): array{
+        $unserialized = unserialize(base64_decode($arrAccount));
+        return $unserialized;
+    }
 
 
 }

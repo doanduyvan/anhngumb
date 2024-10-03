@@ -2,10 +2,7 @@
 namespace Models;
 class AccountModel{
     private $conn = null;
-    private $id;
-    private $name;
-    private $role;
-    private $priveKey;
+   private $table = 'accounts';
     private $data = [
         'fullName' => null,
         'email' => null,
@@ -17,27 +14,35 @@ class AccountModel{
     public function __construct()
     {
         $this->conn = BaseModel::getInstance();
-        $sql = "select * from accounts";
-        
-        $result = $this->conn->query($sql);
-        $data = $result->fetch_all(MYSQLI_ASSOC);
+    }
 
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
 
-        // $datatemp = [
-        //     'title' => 'kiem tra giua ki',
-        //     'idlesson' => 1,
-        //     'QuestionCMS' => [
-        //         'questionName' => 'Câu hỏi 1',
-        //         'typeAnswer' => 1,
-        //         'answers' => [
-        //             ''
-        //         ]
-        //     ]
-        // ]
-
+    public function addAccount($dataRow){
+        $fullName = $dataRow['fullName'];
+        $email = $dataRow['email'];
+        $pass = $dataRow['password'];
+        $roles = 0;
+        $statuss = 0;
+        $sql = "INSERT INTO $this->table (fullName, email, pass, roles, statuss) VALUES ('$fullName', '$email', '$pass', $roles, $statuss)";
+        try {
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $this->conn->commit();
+            return [
+                'message' => 'Account registration successful'
+            ];
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            if ($e->getCode() == 1062) {  // 1062 là mã lỗi MySQL cho Duplicate entry
+                return [
+                    'error' => 'Email already exists'
+                ];
+            } else {
+                return [
+                    'error' => 'Database error: ' . $e->getMessage()
+                ];
+            }
+        }
     }
 
 }

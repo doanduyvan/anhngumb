@@ -71,14 +71,14 @@ class ViewLogin extends \Views\ViewsBase
 
                 <div class="flex-row" style="margin-top: 15px;">
                     <div class="check_remember">
-                        <input type="checkbox" id="remember">
+                        <input type="checkbox" id="remember" name="rememberMe">
                         <label for="remember">Remember me</label>
                     </div>
                     <span class="span" onclick="alert('Tính năng đang được cập nhật!')">Forgot password?</span>
                 </div>
 
                 <button class="button-submit">Sign In</button>
-                <p class="p">Don't have an account? <span class="span" onclick="changeAuth(1)">Sign Up</span>
+                <p class="p">Don't have an account? <span class="span" id="btnsignup">Sign Up</span>
 
                 </p>
                 <p class="p line">Or With</p>
@@ -110,8 +110,19 @@ class ViewLogin extends \Views\ViewsBase
         </main>
 
         <main class="container main-signup" id="main-signup">
-            <form class="form">
+            <form class="form" id="form-signup">
                 <h2 class="title">Sign Up Account</h2>
+                <div class="flex-column">
+                    <label>Full Name </label>
+                </div>
+
+                <div class="inputForm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="25" height="25">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                    <input placeholder="Enter your full name" class="input" name="fullName" type="text">
+                </div>
+
                 <div class="flex-column">
                     <label>Email </label>
                 </div>
@@ -173,7 +184,7 @@ class ViewLogin extends \Views\ViewsBase
                 </div>
 
                 <button class="button-submit">Sign Up</button>
-                <p class="p">Do you already have an account? <span class="span" onclick="changeAuth(0)">Sign In</span>
+                <p class="p">Do you already have an account? <span class="span" id="btnsignin">Sign In</span>
 
                 </p>
                 <p class="p line">Or With</p>

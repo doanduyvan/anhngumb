@@ -16,7 +16,7 @@ class AccountModel{
 
 
     function getCourse(){
-        $course
+        // $course
     }
 
 }

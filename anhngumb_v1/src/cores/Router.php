@@ -30,12 +30,12 @@ class Router
 
 
     function hanldUser() {
-        // $auth = new Authentication();
+        $auth = new Authentication();
         // if(!$this->isRouters()) {
         //     $this->render404();
         // }
         // if(Authentication::isLogin()){
-        // new \Cores\App($this->controler, $this->action, $this->params, 1);
+        // new \Cores\App($this->controler, $this->action, $this->params, 0);
         // }else{
         //    $Clogin = new \Controllers\LoginController();
         // }

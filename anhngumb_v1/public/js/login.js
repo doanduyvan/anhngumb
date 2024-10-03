@@ -1,4 +1,15 @@
 
+const btnsignin = document.getElementById('btnsignin');
+const btnsignup = document.getElementById('btnsignup');
+btnsignin.onclick = function () {
+    changeAuth(0);
+}
+btnsignup.onclick = function () {
+    changeAuth(1);
+}
+
+// changeAuth(1);
+
 function changeAuth(isLogin = 0) {
     const mainSignin = document.getElementById('main-signin');
     const mainSignup = document.getElementById('main-signup');
@@ -33,12 +44,14 @@ document.querySelectorAll('.span_eye').forEach(span => {
 const formSignIn = document.querySelector('#main-signin .form');
 const formSignUp = document.querySelector('#main-signup .form');
 
+// sử lí đăng nhập
+
 formSignIn.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(formSignIn);
-    const email = formData.get('email');
-    const password = formData.get('password');
+    const formData = mbFormData(formSignIn);
+    console.log(formData);
 
+    return;
     if (!validateEmail(email)) {
         showNotif('Warning', 'Invalid email', 1);
         return;
@@ -50,28 +63,58 @@ formSignIn.addEventListener('submit', (e) => {
     sendSignIn(email,password);
 });
 
-formSignUp.addEventListener('submit', (e) => {
+// sử lí đăng kí
+
+formSignUp.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(formSignUp);
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const confirmpassword = formData.get('confirmpassword');
-    if (!validateEmail(email)) {
+
+    const formData = mbFormData(formSignUp);
+
+    if (!validatePassword(formData.fullName)) {
+        showNotif('Warning', 'FullName must be between 3 and 30 characters', 1);         
+        return;
+    }
+
+    if (!validateEmail(formData.email)) {
         showNotif('Warning', 'Invalid email', 1);         
         return;
     }
-    if (!validatePassword(password)) {
-        notifs[1].textContent = 'Password must be between 3 and 20 characters';
-        showNotif('Warning', 'Password must be between 3 and 20 characters', 1);
+    if (!validatePassword(formData.password)) {
+        showNotif('Warning', 'Password must be between 3 and 30 characters', 1);
         return;
     }
-    if (password !== confirmpassword) {
+    if (formData.password !== formData.confirmpassword) {
         showNotif('Warning', 'Passwords do not match', 1);
         return;
     }
-    sendSignUp(email,password);
+
+    for (let key in formData) {
+        formData[key] = formData[key].trim();
+    }
+
+    try {
+        loading(true);
+        const datares = await mbFetch('?signup', formData);
+        console.log(datares);
+        if(datares.error){
+            showNotif('Error', datares.error, 2, 2000);
+            return;
+        }
+        formSignUp.reset();
+        showNotif('Success', datares.message, 0, 2500);
+        setTimeout(() => { window.location.reload() }, 1500);
+    } catch (error) {
+        console.error(error);
+        showNotif('Error', 'Sign up fail', 2, 2000);
+    }finally{
+        loading(false);
+    }
+
 });
 
+
+
+// code fail
 function sendSignUp(email,password){
     const options = {
         method: 'POST',
@@ -152,27 +195,10 @@ function sendSignInGoogle(id_token){
     },options);
 }
 
-
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-function validatePassword(password) {
-    if (password.length >= 3 && password.length <= 30) {
-        return true;
-    }
-    return false;
-}
+// clode fail code
 
 
-function linkGoogle(){
-    const clientId = '865532873608-aik1oar7v5gimbu4m84dcl2aj8me92ih.apps.googleusercontent.com';
-    const client_Uri = 'http://localhost/anhngumb/anhngumb_v1/';
-    const scope = 'openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile';
-    const nonce = Math.random().toString(36).substring(2); // Tạo nonce ngẫu nhiên
-    return  `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&response_type=id_token%20token&redirect_uri=${client_Uri}&client_id=${clientId}&nonce=${nonce}`;
-}
+
 
 const btnGoogle = document.querySelectorAll('.btn.google');
 btnGoogle.forEach(btn => {
@@ -193,11 +219,28 @@ function getTokenGoogle(){
 
 
 
-function afterSignIn(){
 
+// library
+
+function linkGoogle(){
+    const clientId = '865532873608-aik1oar7v5gimbu4m84dcl2aj8me92ih.apps.googleusercontent.com';
+    const client_Uri = 'http://localhost/anhngumb/anhngumb_v1/';
+    const scope = 'openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile';
+    const nonce = Math.random().toString(36).substring(2); // Tạo nonce ngẫu nhiên
+    return  `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&response_type=id_token%20token&redirect_uri=${client_Uri}&client_id=${clientId}&nonce=${nonce}`;
 }
 
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
 
+function validatePassword(password) {
+    if (password.length >= 3 && password.length <= 30) {
+        return true;
+    }
+    return false;
+}
 
 
 function showNotif(title, mess, indexType, duration = 1500) {
@@ -281,4 +324,35 @@ function loading(load = false){
             document.body.appendChild(loading);
         }
     }
+}
+
+function mbFormData(form) {
+    const formData = new FormData(form);
+    const formObject = Object.fromEntries(formData.entries());
+    return formObject;
+}
+
+function mbFetch(url, data = null){
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            method: data ? 'POST' : 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: data ? JSON.stringify(data) : null,
+        })
+        .then(response => {
+            if(response.ok){
+                return response.json()
+                .catch(() => { 
+                    const baseElement = document.querySelector('base');
+                    let fullurl = baseElement ? baseElement.href + url : window.location.origin + url;
+                    throw 'Duy Vấn: Dữ liệu không phải json, hãy kiểm tra trên server có trả về json không, đúng đường dẫn không, kiểm tra URL: ' + fullurl;
+                });
+            }
+            throw new Error('Duy Vấn: Lỗi status, không phải 200 đến 299 hoặc do lỗi mạng, Error_Code: ' + response.status);
+        })
+        .then(data => resolve(data))
+        .catch(err => reject(err));
+    });
 }

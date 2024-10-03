@@ -1,263 +1,4 @@
-<style>
-    :root {
-        --mb-text-nomal: 16px;
-        --mb-text-title: 20px;
-    }
-
-    .dv-content-quiz {
-        padding: 10px;
-    }
-
-    .dv-content-quiz-box {
-        background-color: white;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    .dv-content-quiz-box.quizzes .quiz-title {
-        font-size: 22px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .dv-content-quiz-box.quizzes .media-audio {
-        margin-top: 15px;
-    }
-
-    .dv-content-quiz-box.quizzes .media-audio>span {
-        font-size: 18px;
-        font-weight: 500;
-        color: #000000;
-    }
-
-    .dv-content-quiz-box.quizzes .media-audio>audio {
-        width: 100%;
-        margin-top: 5px;
-    }
-
-    .dv-content-quiz-box.quizzes .media-text {
-        margin-top: 15px;
-        border-bottom: 1px solid rgba(192, 192, 192, 0.5);
-        padding-bottom: 10px;
-    }
-
-    .dv-content-quiz-box.quizzes .media-text>span {
-        font-size: 18px;
-        font-weight: 500;
-        color: #000000;
-    }
-
-    .dv-content-quiz-box.quizzes .media-text>p {
-        font-size: var(--mb-text-nomal);
-        color: #333;
-        margin-top: 5px;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions {
-        margin-top: 15px;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-box {
-        /* border: 1px solid #ccc; */
-        margin-top: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        background-color: rgba(202, 202, 202, 0.3);
-        /* background-color: red; */
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-write>p,
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-choice>p {
-        font-size: var(--mb-text-title);
-        font-weight: 500;
-        color: #000000;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-choice .answers-choice-group {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        margin-top: 15px;
-        gap: 10px;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-choice .answers-choice-group>label {
-        --border-color: transparent;
-        flex: 1 1 45%;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 5px;
-        cursor: pointer;
-        display: flex;
-        justify-content: start;
-        align-items: center;
-        gap: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        background-color: white;
-        border: 2px solid var(--border-color);
-    }
-
-    /* active question */
-    .dv-content-quiz-box.quizzes .quizListQuestions:not(.showResult) .question-choice .answers-choice-group>label:hover {
-        --border-color: blue;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-choice .answers-choice-group>label>input {
-        display: none;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions:not(.showResult) .question-choice .answers-choice-group>label:has(input:checked) {
-        --border-color: blue;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-choice .answers-choice-group>label>span {
-        font-size: var(--mb-text-nomal);
-        color: #000000;
-    }
-
-    /* show Result */
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-choice .answers-choice-group>label {
-        pointer-events: none;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-choice.isCorrectTrue .answers-choice-group>label:has(input:checked) {
-        --border-color: green;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-choice.isCorrectFalse .answers-choice-group>label:has(input:checked) {
-        --border-color: red;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions .question-write>input {
-        --border-color: transparent;
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: var(--mb-text-nomal);
-        color: #000000;
-        margin-top: 5px;
-        outline: none;
-        background-color: white;
-        border: 2px solid var(--border-color);
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-write>input {
-        pointer-events: none;
-        border: 2px solid var(--border-color);
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-write.isCorrectTrue>input {
-        --border-color: green;
-    }
-
-    .dv-content-quiz-box.quizzes .quizListQuestions.showResult .question-write.isCorrectFalse>input {
-        --border-color: red;
-    }
-
-    .dv-content-quiz-box.quizzes .submit-box {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .dv-content-quiz-box.quizzes .submit-box .btn.tryagain {
-       background-color: green;
-       border-color: green;
-    }
-    .dv-content-quiz-box.quizzes .submit-box .btn.tryagain:hover {
-        background-color: rgb(0, 95, 0);
-        border-color: green;
-    }
-
-    .dv-content-quiz-box.quizzes .submit-box .quize-score{
-        font-size: 20px;
-        font-weight: 500;
-        color: #000000;
-    }
-
-    @media (max-width: 500px) {
-        .dv-content-quiz-box.quizzes .quizListQuestions .question-choice .answers-choice-group>label {
-            flex: 1 1 100%;
-        }
-    }
-</style>
-
-
-
-
-
-
-
-
-<div class="dv-content-quiz">
-
-
-
-    <div class="dv-content-quiz-box quizzes">
-        <form action="" id="formQuizzes">
-            <div class="title">
-                <h3 class="quiz-title"></h3>
-            </div>
-
-            <div class="quizmedia">
-                <!-- <div class="media-audio">
-                    <span>Nghe ddoan van tren va tra loi cau hoi</span>
-                    <audio controls>
-                        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
-                    </audio>
-                </div> -->
-
-                <!-- <div class="media-text">
-                    <span>đọc đoạn văn dưới đây và trả lời câu hỏi</span>
-                    <p>
-                        My mother is a person I admire most. She devoted a lot of time and energy to the upbringing of my two brothers and 1. Despite working hard, she always made time to teach us many useful things which are necessary and important in our later lives. Moreover, she is a good role model for me to follow. She always tries to get on well with people who live next door and help everyone when they are in difficulties, so most of them respect and love her. I admire and look up to my mother because she not only brings me up well but also stands by me and gives some help if necessary. For example, when I encounter some difficulties, she will give me some precious advice to help me solve those problems. She has a major influence on me and 1 hope that I will inherit some of her traits.
-                    </p>
-                </div> -->
-            </div>
-
-            <div class="quizListQuestions">
-                <!-- <div class="question-box question-choice">
-                    <p class="question-title">1. What is the name of the animal?</p>
-                    <div class="answers-choice-group">
-                        <label class="answers-choice-label">
-                            <input type="radio" name="question1" id="question1" value="1">
-                            <span>hourse</span>
-                        </label>
-                        <label class="answers-choice-label">
-                            <input type="radio" name="question1" id="question1" value="1">
-                            <span>hourse</span>
-                        </label>
-                        <label class="answers-choice-label">
-                            <input type="radio" name="question1" id="question1" value="1">
-                            <span>hourse</span>
-                        </label>
-                        <label class="answers-choice-label">
-                            <input type="radio" name="question1" id="question1" value="1">
-                            <span>hourse</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="question-box question-write">
-                    <p class="question-title">2. What is the name of the animal?</p>
-                    <input type="text" name="question2" id="question2" class="form-control" placeholder="Enter your answer">
-                </div> -->
-            </div>
-
-            <!-- <div class="submit-box">
-                <div class="quize-score"></div>
-                <button type="button" class="btn btn-primary btn-submit-quiz">Submit</button>
-            </div> -->
-        </form>
-    </div>
-</div>
-
-
-<script type="module">
-    import { mbNotification, mbConfirm, mbLoading, mbFetch, mbPagination, mbFormData } from './public/js/allmodule.js';
+    import { mbNotification, mbConfirm, mbLoading, mbFetch, mbPagination, mbFormData } from '../allmodule.js';
 
     const Quizdemo = {
     id: 1,
@@ -499,6 +240,24 @@
     ]
 };
 
+
+    const divRoot = document.getElementById('root');
+    divRoot.innerHTML = `
+        <div class="dv-content-quiz">
+
+        <div class="dv-content-quiz-box quizzes">
+        <form action="" id="formQuizzes">
+        <div class="title">
+        <h3 class="quiz-title"></h3></div>
+        <div class="quizmedia"></div>
+
+        <div class="quizListQuestions"></div>
+        </form>
+        </div>
+        </div>
+
+    `;
+
     const STTABC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
     const formQuizzes = document.getElementById('formQuizzes');
@@ -718,5 +477,3 @@
     }
 
 
-
-</script>
