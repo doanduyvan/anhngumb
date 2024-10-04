@@ -44,17 +44,6 @@ class LoginController
 
     function signin($datareq) {
 
-        $data = [
-            'message' => 'test success'
-        ];
-        if(isset($_COOKIE)){
-            $data['cookie'] = $_COOKIE;
-        }else{
-            $data['cookie'] = 'khong co cookie';
-        }
-
-        echo json_encode($data);
-        return;
         $dataResModel = $this->accountModel->signinModel($datareq);
         if(isset($dataResModel['error'])){
             echo json_encode($dataResModel);
@@ -74,17 +63,25 @@ class LoginController
     }
 
     function signinGoogle($data) {
-        // $auth = new Authentication();
-        // $token = $data['idToken'];
-        // $payload = $auth->verifyIdTokenGoogle($data['idToken']);
-        // if ($payload) {
-        //     $_SESSION['acc'] = $payload;
-        //     echo json_encode($payload);
-        // } else {
-        //     echo json_encode(['error' => 'idToken khong hop le']);
-        // }
-        array_push($data, ['test' => 'day la sign in google thanh cong']);
-        echo json_encode($data);
+        $idToken = $data['idToken'];
+        $dataResModel = $this->auth->getInfoByIdTokenGoogle($idToken);
+        if(isset($dataResModel['error'])){
+            echo json_encode($dataResModel);
+            return;
+        }
+        $dataResGoogleModel = $this->accountModel->signinGoogleModel($dataResModel);
+        if(isset($dataResGoogleModel['error'])){
+            echo json_encode($dataResGoogleModel);
+            return;
+        }
+        Authentication::setAccountSession($dataResGoogleModel);
+        if(isset($data['rememberMe']) && $data['rememberMe']){
+            $base46 = Authentication::encryption($dataResGoogleModel);
+            setcookie('user_token_mb', $base46, time() + 3600*24*90, '/');
+        }
+        $dataRes = [
+            'message' => 'Login success'
+        ];
+        echo json_encode($dataRes);
     }
-
 }

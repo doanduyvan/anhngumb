@@ -10,39 +10,68 @@ class Router
     private $controler = 'dashboard';
     private $action = 'index';
     private $params = [];
-
+    private $isLogin = false;
     function __construct()
     {
         $this->auth = new Authentication();
         $arrUrl = $this->UrlProcess();
+        $this->handlUrl($arrUrl);
+        if($this->controler == 'logout'){
+            $this->auth->logout();
+            header('Location:' . WEB_ROOT);
+            die();
+        }
+        $this->isLogin = $this->auth->isLoginSession();
+        if(!$this->isLogin){
+            $this->isLogin = $this->auth->isLoginCookie();
+        }
+        if(!$this->isLogin){
+            new \Controllers\LoginController();
+            die();
+        }
+        $roleLogin = $this->auth->getRole();
+        if($roleLogin == 1 || $roleLogin == 2){
+            $this->hanldAdmin();
+        }else{
+            $this->handlUser();
+        }
+    }
+
+    function handlUrl($arrUrl){
         if (isset($arrUrl[0]) && $arrUrl[0] == 'admin') {
             $this->controler = isset($arrUrl[1]) ? $arrUrl[1] : $this->controler;
             $this->action = isset($arrUrl[2]) ? $arrUrl[2] : $this->action;
             $this->params = $this->handlParams($arrUrl, 3);
-            $this->handlAdmin();
         } else {
             $this->controler = isset($arrUrl[0]) ? $arrUrl[0] : $this->controler;
             $this->action = isset($arrUrl[1]) ? $arrUrl[1] : $this->action;
             $this->params = $this->handlParams($arrUrl, 2);
-            $this->hanldUser();
         }
     }
 
 
-    function hanldUser() {
+    function handlUser() {
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            new \Cores\App($this->controler, $this->action, $this->params, 0);
+            die();
+        }
         // if(!$this->isRouters()) {
-        //     $this->render404();
+        //     header('Location:' . WEB_ROOT);
+        //     die();
         // }
-        if(Authentication::isLoginSession()){
-        // new \Cores\App($this->controler, $this->action, $this->params, 0);
-        }else{
-           $Clogin = new \Controllers\LoginController();
-        }
-        // new \Cores\App($this->controler, $this->action, $this->params, 0);
+        new \Cores\App($this->controler, $this->action, $this->params, 0);
     }
 
-    function handlAdmin()
+    function hanldAdmin()
     {
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            new \Cores\App($this->controler, $this->action, $this->params, 1);
+            die();
+        }
+        // if(!$this->isRouters()) {
+        //     header('Location:' . WEB_ROOT . 'admin');
+        //     die();
+        // }
         new \Cores\App($this->controler, $this->action, $this->params, 1);
     }
 

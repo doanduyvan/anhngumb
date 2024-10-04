@@ -44,7 +44,7 @@ document.querySelectorAll('.span_eye').forEach(span => {
 const formSignIn = document.querySelector('#main-signin .form');
 const formSignUp = document.querySelector('#main-signup .form');
 
-// sử lí đăng nhập
+// sử lí đăng nhập thường
 
 formSignIn.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -65,13 +65,13 @@ formSignIn.addEventListener('submit', async (e) => {
         loading(true);
         const datares = await mbFetch('?signin', formData);
         if(datares.error){
-            showNotif('Error', datares.error, 2, 2500);
+            showNotif('Error', datares.error, 2, 3000);
             return;
         }
         formSignIn.reset();
         showNotif('Success', datares.message, 0, 1000);
         console.log(datares);
-        // setTimeout(() => { window.location.reload() }, 1000);
+        setTimeout(() => { window.location.reload() }, 1000);
     }catch(error){
         console.error(error);
         showNotif('Error', 'Sign in fail', 2, 2000);
@@ -131,6 +131,70 @@ formSignUp.addEventListener('submit', async (e) => {
 });
 
 
+// tùy chọn nhớ mật khẩu bằng localstorage
+const EinputRemember = document.getElementById('remember');
+let statusRemember = false;
+const statusString = localStorage.getItem('rememberMB');
+if(statusString === 'true'){
+    statusRemember = true;
+}else if(statusString === 'false'){
+    statusRemember = false;
+}
+EinputRemember.checked = statusRemember;
+EinputRemember.addEventListener('change',()=>{
+    localStorage.setItem('rememberMB',EinputRemember.checked);
+});
+
+// sử lí đăng nhập google
+
+const btnGoogle = document.querySelectorAll('.btn.google');
+btnGoogle.forEach(btn => {
+    btn.addEventListener('click',()=>{
+        window.location.href = linkGoogle();
+    })
+})
+
+getTokenGoogle();
+async function getTokenGoogle(){
+    const url = new URLSearchParams(window.location.hash.substring(1));
+    const id_token = url.get('id_token');
+    if(!id_token){
+        return;
+    }
+
+    try{
+        loading(true);
+        const remember = document.getElementById('remember').checked;
+        const datares = await mbFetch('?signinGoogle',{idToken: id_token, rememberMe: remember});
+        console.log(datares);
+        if(datares.error){
+            showNotif('Error', datares.error, 2, 2000);
+            removeTokensFromUrl();
+            return;
+        }
+        showNotif('Success', datares.message, 0, 2000);
+        removeTokensFromUrl();
+        window.location.reload();
+    }catch(error){
+        console.error(error);
+        showNotif('Error', 'Sign in google fail', 2, 2000);
+    }finally{
+        loading(false);
+    }
+}
+
+function removeTokensFromUrl() {
+    // Xóa phần hash token trên URL
+    window.history.replaceState(null, null, window.location.pathname);
+}
+
+function linkGoogle(){
+    const clientId = '865532873608-aik1oar7v5gimbu4m84dcl2aj8me92ih.apps.googleusercontent.com';
+    const client_Uri = 'http://localhost/anhngumb/anhngumb_v1/';
+    const scope = 'openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile';
+    const nonce = Math.random().toString(36).substring(2); // Tạo nonce ngẫu nhiên
+    return  `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&response_type=id_token%20token&redirect_uri=${client_Uri}&client_id=${clientId}&nonce=${nonce}`;
+}
 
 // code fail
 function sendSignUp(email,password){
@@ -218,35 +282,9 @@ function sendSignInGoogle(id_token){
 
 
 
-const btnGoogle = document.querySelectorAll('.btn.google');
-btnGoogle.forEach(btn => {
-    btn.addEventListener('click',()=>{
-        window.location.href = linkGoogle();
-    })
-})
-
-getTokenGoogle();
-function getTokenGoogle(){
-    const url = new URLSearchParams(window.location.hash.substring(1));
-    const token = url.get('access_token');
-    const id_token = url.get('id_token');
-    if(id_token){
-        sendSignInGoogle(id_token);
-    }
-}
-
-
-
-
 // library
 
-function linkGoogle(){
-    const clientId = '865532873608-aik1oar7v5gimbu4m84dcl2aj8me92ih.apps.googleusercontent.com';
-    const client_Uri = 'http://localhost/anhngumb/anhngumb_v1/';
-    const scope = 'openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile';
-    const nonce = Math.random().toString(36).substring(2); // Tạo nonce ngẫu nhiên
-    return  `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&response_type=id_token%20token&redirect_uri=${client_Uri}&client_id=${clientId}&nonce=${nonce}`;
-}
+
 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

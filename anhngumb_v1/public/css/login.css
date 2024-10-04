@@ -302,7 +302,7 @@ a{
   background-color: rgba(161, 161, 161, 0.2);
   z-index: 60;
   backdrop-filter: blur(1px);
-  animation: fadeLoading 0.3s linear;
+  animation: fadeLoading 0.5s linear;
 }
 
 @keyframes fadeLoading {

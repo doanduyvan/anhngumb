@@ -15,8 +15,7 @@ class Authentication{
         // return [
         //     'id' => $row['id'],
         //     'fullName' => $row['fullName'],
-        //     'roles' => $row['roles'],
-        //     'statuss' => $row['statuss']
+        //     'roles' => $row['roles']
         // ];
     }
 
@@ -37,67 +36,65 @@ class Authentication{
         return false;
     }
 
+    static function getId(){
+        return isset($_SESSION['acc']['id']) ? $_SESSION['acc']['id'] : null;
+    }
+
     static function getRole(){
-        return isset($_SESSION['acc']['role']) ? $_SESSION['acc']['role'] : null;
+        return isset($_SESSION['acc']['roles']) ? $_SESSION['acc']['roles'] : null;
+    }
+
+    static function getFullName(){
+        return isset($_SESSION['acc']['fullName']) ? $_SESSION['acc']['fullName'] : null;
+    }
+
+    static function logout(){
+        unset($_SESSION['acc']);
+        session_destroy();
+        setcookie('user_token_mb', '', time() - 3600, '/');
     }
 
 
-    function verifyIdTokenGoogle($idToken) {
-        try{
+    function getInfoByIdTokenGoogle($idToken){
+
         $client = new Client([ $idToken => $this->IdClient]); // Thay bằng client ID của bạn
         $payload = $client->verifyIdToken($idToken);
-        }catch(\Exception $e){
-            return false;
-        }
         if ($payload) {
             // ID Token hợp lệ, xử lý thông tin người dùng
-            $userId = $payload['sub']; // ID người dùng Google
             $email = $payload['email']; // Email của người dùng
-            $verifiedEmail = $payload['email_verified']; // Xác thực email
-            return $payload; // Trả về thông tin người dùng
+            $nameGoogle = $payload['name']; // Tên người dùng
+            $avatar = $payload['picture']; // Ảnh đại diện
+            return [
+                'email' => $email,
+                'fullName' => $nameGoogle,
+                'avatar' => $avatar
+            ];
         } else {
             // ID Token không hợp lệ
-            return false;
+            return [
+                'error' => 'ID Token không hợp lệ'
+            ];
         }
+
     }
 
-
-
-    function autoLogin(){
-        // kiểm tra token được gửi từ header của người dùng có tồn tại hay không và có hợp lệ hay không
-        $headers = getallheaders();
-        if(isset($headers['Authorization'])){
-           $token = $headers['Authorization'];
-           $userData = $this->verifyToken($token);
-           if($userData){
-            //    $_SESSION['acc'] = $userData;
-               return true;
-           }
+    static function getAvatar() {
+        $linkimgdefault = 'public/img/default_profile.jpg';
+        $id = self::getId();
+        if(!$id){
+            return $linkimgdefault;
         }
-    }
-
-    private function verifyToken($token){
-        $token = base64_decode($token);
-        $token = json_decode($token,true);
-        if(isset($token['id']) && isset($token['name']) && isset($token['role'])){
-            return true;
+        $accountModel = new \Models\AccountModel();
+        $linkimg = $accountModel->getLinkImgModel($id);
+        if(!$linkimg){
+            return $linkimgdefault;
         }
-        return false;
-    }
-
-
-    static function test(){
-        $headers = getallheaders();
-        $token = $headers['Authorization'];
-        print_r($token);
-
-        $ss = [
-            'id' => 1,
-            'name' => 'admin',
-            'role' => 'admin'
-        ];
-
-        //role 0: students, 1: instructor, 2: admin
+        $headers = @get_headers($linkimg);
+        if($headers && strpos($headers[0], '200')) {
+            return $linkimg;
+        } else {
+            return $linkimgdefault;
+        }
     }
 
     static function encryption($arrAccount): string{
