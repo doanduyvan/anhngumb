@@ -1,51 +1,59 @@
 <?php
 namespace Models;
-class LessonModel{
+class ClassModel{
+
     private $conn = null;
-    private $table = 'lessons';
+    private $table = 'classes';
 
     public function __construct()
     {
         $this->conn = BaseModel::getInstance();
     }
 
-    public function getLessons($itemsPerPage, $currentPage)
+    public function getClasses($itemsPerPage, $currentPage)
     {
         $offset = ($currentPage - 1) * $itemsPerPage;
-        $totalLessons = $this->gettotalLessons();
-        $totalPages = ceil($totalLessons / $itemsPerPage);
+        $totalClasses = $this->getTotalClasses();
+        $totalPages = ceil($totalClasses / $itemsPerPage);
         $sql = "SELECT * FROM $this->table ORDER BY id DESC LIMIT $itemsPerPage OFFSET $offset";
         $stmt = $this->conn->query($sql);
-        $lessons = $stmt->fetch_all(MYSQLI_ASSOC);
+        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
         return [
-            'lessons' => $lessons,
+            'Classes' => $classes,
             'totalPages' => $totalPages
         ];
     }
-    public function getLessonsById($lessonId){
-        $sql = "SELECT * FROM $this->table WHERE id = $lessonId";
+
+    public function getClassesById($classId){
+        $sql = "SELECT * FROM $this->table WHERE id = $classId";
         $stmt = $this->conn->query($sql);
         $course = $stmt->fetch_assoc();
         return $course;
     }
 
-    public function gettotalLessons(){
+    public function getTotalClasses(){
         $totalItemsQuery = $this->conn->query("SELECT COUNT(*) as total FROM $this->table");
         $totalItems = $totalItemsQuery->fetch_assoc();
         return $totalItems['total'];
     }
 
-    public function addLesson($dataRow){
-        $lessonName = $dataRow['lessonName'];
+    public function addClass($dataRow){
+        $className = $dataRow['className'];
+        $startDate = $dataRow['startDate'];
         $idCourses = $dataRow['courseId'];
-        $sql = "INSERT INTO $this->table (lessonName, idCourses) VALUES ('$lessonName', '$idCourses')";
+
+        // tính toán ngày kết thúc 3 tháng sau ngày bắt đầu
+        $date = new \DateTime($startDate);
+        $date->modify('+ 3 months');
+        $endDate = $date->format('Y-m-d'); // chuyển định dạng thành yyyy-mm-dd
+        $sql = "INSERT INTO $this->table (className, startDate, endDate, idCourses) VALUES ('$className', '$startDate', '$endDate','$idCourses')";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
-            $newLessonId = $this->conn->insert_id;
-            $newLesson = $this->getLessonsById($newLessonId);
+            $newClassId = $this->conn->insert_id;
+            $newClass = $this->getClassesById($newClassId);
             $this->conn->commit();
-            return $newLesson;
+            return $newClass;
         } catch (\Exception $e) {
             $this->conn->rollback();
             return [
@@ -54,16 +62,16 @@ class LessonModel{
         }
     }
 
-    public function editLesson($dataRow){
-        $lessonId = $dataRow['id'];
-        $lessonName = $dataRow['lessonName'];
-        $sql = "UPDATE $this->table SET lessonName = '$lessonName'  WHERE id = $lessonId";
+    public function editClass($dataRow){
+        $classId = $dataRow['id'];
+        $className = $dataRow['className'];
+        $sql = "UPDATE $this->table SET className = '$className'  WHERE id = $classId";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
-            $newCourse = $this->getLessonsById($lessonId);
+            $newClass = $this->getClassesById($classId);
             $this->conn->commit();
-            return $newCourse;
+            return $newClass;
         } catch (\Exception $e) {
             $this->conn->rollback();
             return [
@@ -72,9 +80,9 @@ class LessonModel{
         }
     }
 
-    public function deleteLesson($dataRow){
-        $lessonId = $dataRow['id'];
-        $sql = "DELETE FROM $this->table WHERE id = $lessonId";
+    public function deleteClass($dataRow){
+        $classId = $dataRow['id'];
+        $sql = "DELETE FROM $this->table WHERE id = $classId";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
@@ -86,5 +94,5 @@ class LessonModel{
                 'error' => $e->getMessage()
             ];
         }
-}
+    }
 }

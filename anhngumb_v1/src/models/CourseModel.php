@@ -10,6 +10,13 @@ class CourseModel{
         $this->conn = BaseModel::getInstance();
     }
 
+    public function getAllCourses(){
+        $sql = "SELECT * FROM $this->table ORDER BY id DESC";
+        $stmt = $this->conn->query($sql);
+        $courses = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $courses;
+    }
+
     public function getCourses($itemsPerPage, $currentPage)
     {
         $offset = ($currentPage - 1) * $itemsPerPage;

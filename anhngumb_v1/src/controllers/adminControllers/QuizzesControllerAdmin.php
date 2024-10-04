@@ -6,7 +6,7 @@ class QuizzesControllerAdmin{
 
     function __construct()
     {
-        $this->quizView = new \Views\ViewLayout('Đoàn Duy Vấn',2);
+        $this->quizView = new \Views\ViewLayout();
     }
 
     function index(){
