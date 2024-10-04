@@ -79,6 +79,7 @@ const handlerProxyCourse = {
             renderCourse();
         }else if (property === 'itemPerPage') {
             renderCourse();
+            
         }
         return true;
     }

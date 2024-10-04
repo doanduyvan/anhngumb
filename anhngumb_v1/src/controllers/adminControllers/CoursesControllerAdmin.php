@@ -12,7 +12,7 @@ class CoursesControllerAdmin {
     function index(){
         $course = new ViewLayout('Đoàn Duy Vấn',2);
         $course->setTitle('Danh sách khóa học');
-        $course->setActivePage(2);
+        $course->setActivePage(6);
         $course->templatehtml = file_get_contents('public/temphtml/tempadmin/courseAdmin.html');
         $course->addCSS('public/css/Admin/courseAdmin.css');
         $course->addJS('public/js/Admin/courseAdmin.js');
@@ -25,6 +25,10 @@ class CoursesControllerAdmin {
         $courses = $this->courseModel->getCourses($itemsPerPage, $currentPage);
         echo json_encode($courses);
     }
+    public function getallcourses() {
+      $courses = $this->courseModel->getAllCourses();
+      echo json_encode($courses);
+  }
 
     public function addCourse() {
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -49,6 +53,4 @@ class CoursesControllerAdmin {
         echo json_encode($course);
       }
     }
-
-
 }

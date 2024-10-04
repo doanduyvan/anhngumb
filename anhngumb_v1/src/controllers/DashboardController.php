@@ -4,7 +4,7 @@ class DashboardController
 {
     public function index()
     {
-        $dashboard = new \Views\ViewLayout('Đoàn Duy Vấn',0);
+        $dashboard = new \Views\ViewLayout('Đoàn Duy Vấn',2);
         $dashboard->setTitle('Dashboard - AnhnguMB');
         $dashboard->setActivePage(1);
         $dashboard->addCSS('public/css/dashboard.css');

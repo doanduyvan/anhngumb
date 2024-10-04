@@ -4,10 +4,8 @@ namespace AdminControllers;
 class DashboardControllerAdmin{
 
     function index(){
-        $dashboard = new \Views\ViewLayout(); 
+        $dashboard = new \Views\ViewLayout('tam', 2); 
         $dashboard->setTitle('day la trang dashboard');
-        $dashboard->setRole('ngọc tam',2);
-        $dashboard->setPage(('Dashboard'));
         // set CSS 
         $dashboard->addCSS('public/css/style.css');
         $dashboard->addCSS('public/css/dashboard.css');

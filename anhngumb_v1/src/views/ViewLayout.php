@@ -130,10 +130,18 @@ class ViewLayout extends ViewsBase
                 'submenu' => null
             ],
             [
+                'id' => 7,
+                'name' => 'Lessons',
+                'svg' => file_get_contents("public/svgs/course.svg"),
+                'link' => 'admin/lessons',
+                'submenu' => null
+            ],
+            
+            [
                 'id' => 2,
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
-                'link' => 'classes',
+                'link' => 'admin/classes',
                 'submenu' => [
                     [
                         'id' => 2.1,
