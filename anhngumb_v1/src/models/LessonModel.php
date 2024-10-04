@@ -86,6 +86,5 @@ class LessonModel{
                 'error' => $e->getMessage()
             ];
         }
-    }
-
+}
 }

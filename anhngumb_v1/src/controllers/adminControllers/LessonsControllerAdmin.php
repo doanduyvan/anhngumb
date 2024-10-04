@@ -15,7 +15,7 @@ class LessonsControllerAdmin
 
     function index()
     {
-        $lesson = new ViewLayout('Đoàn Duy Vấn', 2);
+        $lesson = new ViewLayout();
         $lesson->setTitle('Danh sách khóa học');
         $lesson->setActivePage(7);
         $lesson->addCSS('public/css/Admin/lessonAdmin.css');

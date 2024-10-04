@@ -4,11 +4,11 @@ class DashboardController
 {
     public function index()
     {
-        $dashboard = new \Views\ViewLayout('Đoàn Duy Vấn',2);
+        $dashboard = new \Views\ViewLayout();
         $dashboard->setTitle('Dashboard - AnhnguMB');
         $dashboard->setActivePage(1);
-        $dashboard->addCSS('public/css/dashboard.css');
-        $dashboard->addJS('public/js/dashboard.js');
+        // $dashboard->addCSS('public/css/dashboard.css');
+        // $dashboard->addJS('public/js/dashboard.js');
         $dashboard->render();
         
     }

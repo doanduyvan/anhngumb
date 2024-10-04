@@ -4,19 +4,16 @@ namespace AdminControllers;
 class DashboardControllerAdmin{
 
     function index(){
-        $dashboard = new \Views\ViewLayout('tam', 2); 
+        $dashboard = new \Views\ViewLayout(); 
         $dashboard->setTitle('day la trang dashboard');
+        $dashboard->setActivePage(1);
         // set CSS 
-        $dashboard->addCSS('public/css/style.css');
-        $dashboard->addCSS('public/css/dashboard.css');
-        $dashboard->addCSS('public/css/course.css');
+        // $dashboard->addCSS('public/css/style.css');
+        // $dashboard->addCSS('public/css/dashboard.css');
+        // $dashboard->addCSS('public/css/course.css');
         // set js 
-        $dashboard->addJS('public/js/dashboard.js');
+        // $dashboard->addJS('public/js/dashboard.js');
         $dashboard->render();
-    }
-
-    function concuadashboar(){
-        echo 'day la trang con cua  dashboard';
     }
 
     // Dưới đây là các phương thức dành cho JSON API

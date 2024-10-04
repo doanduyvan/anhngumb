@@ -1,4 +1,3 @@
-
 -- drop database mb_v1;
 
 CREATE DATABASE mb_v1
@@ -14,7 +13,8 @@ create table accounts(
     pass varchar(50),
     roles TINYINT unsigned,
     createdAt timestamp default current_timestamp,
-    statuss tinyint unsigned
+    statuss tinyint unsigned,
+    avatar text
 );
 
 create table courses(

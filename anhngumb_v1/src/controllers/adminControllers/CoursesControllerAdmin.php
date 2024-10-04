@@ -10,7 +10,7 @@ class CoursesControllerAdmin {
     }
 
     function index(){
-        $course = new ViewLayout('Đoàn Duy Vấn',2);
+        $course = new ViewLayout();
         $course->setTitle('Danh sách khóa học');
         $course->setActivePage(6);
         $course->templatehtml = file_get_contents('public/temphtml/tempadmin/courseAdmin.html');

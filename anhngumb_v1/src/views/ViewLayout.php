@@ -1,7 +1,7 @@
 <?php
 
 namespace Views;
-
+use Cores\Authentication;
 class ViewLayout extends ViewsBase
 {
     private $userName = '';
@@ -9,13 +9,15 @@ class ViewLayout extends ViewsBase
     private $role = 0;
     private $idParentPage;
     private $idChildPage = null;
-    private $linkImg = 'public/img/default_profile.jpg';
+    // private $linkImg = 'public/img/default_profile.jpg';
+    private $linkImg = null;
     public $templatehtml = '';
 
-    function __construct($userName, $role)
+    function __construct()
     {
-        $this->role = $role;
-        $this->userName = $userName;
+        $this->role = Authentication::getRole();
+        $this->userName = Authentication::getFullName();
+        $this->linkImg = Authentication::getAvatar();
         $this->setRoleName();
         $this->addCSS('public/css/style.css');
         if ($this->role == 1 || $this->role == 2) {
@@ -61,9 +63,9 @@ class ViewLayout extends ViewsBase
         return [
             [
                 'id' => 1,
-                'name' => 'Dashboard User',
+                'name' => 'Dashboard',
                 'svg' => file_get_contents("public/svgs/dashboard.svg"),
-                'link' => 'dashboard',
+                'link' => '',
                 'submenu' => [
                     [
                         'id' => 1.1,
@@ -81,7 +83,7 @@ class ViewLayout extends ViewsBase
                 'id' => 2,
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
-                'link' => 'classes',
+                'link' => '',
                 'submenu' => [
                     [
                         'id' => 2.1,
@@ -96,10 +98,28 @@ class ViewLayout extends ViewsBase
                 ]
             ],
             [
+                'id' => 5,
+                'name' => 'Quizzes',
+                'svg' => file_get_contents("public/svgs/quiz.svg"),
+                'link' => 'quizzes',
+                'submenu' => [
+                    [
+                        'id' => 5.1,
+                        'name' => 'Class 1',
+                        'link' => '#'
+                    ],
+                    [
+                        'id' => 5.2,
+                        'name' => 'Class 2',
+                        'link' => '#'
+                    ]
+                ]
+            ],
+            [
                 'id' => 3,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),
-                'link' => 'profile',
+                'link' => '',
                 'submenu' => null
             ],
             [
@@ -119,7 +139,7 @@ class ViewLayout extends ViewsBase
                 'id' => 1,
                 'name' => 'Dashboard',
                 'svg' => file_get_contents("public/svgs/dashboard.svg"),
-                'link' => 'dashboard',
+                'link' => 'admin/',
                 'submenu' => null
             ],
             [
@@ -146,7 +166,7 @@ class ViewLayout extends ViewsBase
                     [
                         'id' => 2.1,
                         'name' => 'Add Class',
-                        'link' => '#'
+                        'link' => 'admin/classes/tets'
                     ],
                     [
                         'id' => 2.2,
@@ -159,7 +179,7 @@ class ViewLayout extends ViewsBase
                 'id' => 4,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),
-                'link' => 'profile',
+                'link' => 'admin/',
                 'submenu' => null
             ],
             [
