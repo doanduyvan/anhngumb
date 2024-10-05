@@ -176,6 +176,13 @@ class ViewLayout extends ViewsBase
                 ]
             ],
             [
+                'id' => 8,
+                'name' => 'Accounts',
+                'svg' => file_get_contents("public/svgs/accounts.svg"),
+                'link' => 'admin/accounts',
+                'submenu' => null
+            ],
+            [
                 'id' => 4,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),

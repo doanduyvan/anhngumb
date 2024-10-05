@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (tbody.firstChild) {
           tbody.insertBefore(newtr, tbody.firstChild);
         } else {
-          tbody.appendChild(tr);
+          tbody.appendChild(newtr);
         }
         mbNotification("Success", "Add lesson success", 1, 2);
         addClassForm.reset();

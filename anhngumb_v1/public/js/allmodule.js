@@ -158,9 +158,17 @@ function mbLoading(status = false, parentNode = null){
     const loadingContainer = document.createElement('div');
     if(parentNode){
         bodyloading = parentNode;
+        const loadingold = parentNode.querySelector('.mbLoadingAbsolute');
+        if(loadingold){
+            loadingold.remove();
+        }
         bodyloading.classList.add('mbloadingoverflowhiddenandrelative');
         loadingContainer.classList.add('mbLoadingAbsolute');
     }else{
+        const loadingold = document.querySelector('.mbLoadingFixed');
+        if(loadingold){
+            loadingold.remove();
+        }
         bodyloading = document.querySelector('body');
         loadingContainer.classList.add('mbLoadingFixed');
     }
