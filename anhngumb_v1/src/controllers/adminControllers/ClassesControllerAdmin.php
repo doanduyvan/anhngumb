@@ -22,8 +22,22 @@ class ClassesControllerAdmin
         $class->addJS('public/js/Admin/classAdmin.js');
         $class->render();
     }
-    public function tets(){
+    function addClassAdmin()
+    {
         $class = new ViewLayout();
+        $class->setTitle('Add class');
+        $class->setActivePage(2);
+        $class->addCSS('public/css/Admin/classAdmin.css');
+        $class->addJS('public/js/Admin/addClassAdmin.js');
+        $class->render();
+    }
+    function listClassAdmin()
+    {
+        $class = new ViewLayout();
+        $class->setTitle('list classes');
+        $class->setActivePage(2);
+        $class->addCSS('public/css/Admin/classAdmin.css');
+        $class->addJS('public/js/Admin/listClassAdmin.js');
         $class->render();
     }
     public function getclasses($currentPage = 1, $itemsPerPage = 20)
