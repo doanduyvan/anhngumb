@@ -89,6 +89,20 @@ class ClassModel{
             ];
         }
     }
+
+
+
+
+    // code by duyvan
+
+    public function getClassActive(){
+        $sql = "SELECT * FROM $this->table WHERE statuss = 1 ORDER BY id DESC";
+        $stmt = $this->conn->query($sql);
+        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $classes;
+    }
+
+
     public function updateStatus($dataRow){
         
         $classId = $dataRow['id'];

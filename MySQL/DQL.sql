@@ -5,17 +5,54 @@ use mb_v1;
 -- inner join accounts_classes on idclasses = cl.id where cl.id = ;
 
 
-insert into accounts(fullname,email,pass,roles,statuss) values
-('duyvan12355555','duyvan123123@gmail.com','123','0',0);
-
-insert into courses(courseName) values 
-('Nền Tảng A1'),
-('Nền Tảng A2'),
-('Nền Tảng A3'),
-('Trung Cấp A1'),
-('Trung Cấp A2'),
-('Trung Cấp A3');
 
 
-select * from accounts limit 20 offset 2;
+
+select * from accounts; 
 SELECT COUNT(*) FROM accounts;
+
+
+-- lọc tài khoản tất cả lớp
+select acc.id, acc.fullName, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, cl.statuss as clstt, cl.className from accounts as acc
+left join accounts_classes as accl on acc.id = accl.idAccounts
+left join classes cl on cl.id = accl.idClasses limit 5 offset;
+
+select * from accounts_classes;
+
+
+SELECT 
+    acc.id, 
+    acc.fullName, 
+    acc.roles, 
+    acc.statuss, 
+    acc.createdAt,  
+    acc.avatar, 
+    GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className
+FROM 
+    accounts AS acc
+LEFT JOIN 
+    accounts_classes AS accl ON acc.id = accl.idAccounts
+LEFT JOIN 
+    classes cl ON cl.id = accl.idClasses
+GROUP BY 
+    acc.id;
+
+-- tim kiem bang email 
+
+select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
+        left join accounts_classes as accl on acc.id = accl.idAccounts
+        left join classes cl on cl.id = accl.idClasses
+        where email like "%ta%"
+        group by acc.id order by id desc;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+

@@ -25,6 +25,26 @@ class AccountModel
         return $row['avatar'];
     }
 
+    public function getAccountById($id){
+        $sql = "SELECT * FROM $this->table WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            return null;
+        }
+        $row = $result->fetch_assoc();
+        return [
+            'id' => $row['id'],
+            'fullName' => $row['fullName'],
+            'email' => $row['email'],
+            'roles' => $row['roles'],
+            'statuss' => $row['statuss'],
+            'avatar' => $row['avatar']
+        ];
+    }
+
     public function getAccountByEmail($email){
         $sql = "SELECT * FROM $this->table WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
@@ -152,5 +172,106 @@ class AccountModel
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    public function getAccountsFilter($dataRow){
+
+        $idClass = isset($dataRow['idClass']) ? $dataRow['idClass'] : null;
+        $role = isset($dataRow['role']) ? $dataRow['role'] : null;
+        $status = isset($dataRow['status']) ? $dataRow['status'] : null;
+        $currentPage = $dataRow['currentPage'];
+        $limit = $dataRow['limit'];
+        $offset = ($currentPage - 1) * $limit;
+        // viết câu lệnh truy vấn dựa trên các điều kiện trên
+        $sql = "select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
+        left join accounts_classes as accl on acc.id = accl.idAccounts
+        left join classes cl on cl.id = accl.idClasses";
+
+        $conditions = [];
+
+        if ($idClass !== null) {
+            $conditions[] = "cl.id = $idClass";
+        }
+        
+        if ($role !== null) {
+            $conditions[] = "acc.roles = $role";
+        }
+        
+        if ($status !== null) {
+            $conditions[] = "acc.statuss = $status";
+        }
+
+        if (count($conditions) > 0) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+
+        $sql .= " GROUP BY acc.id ORDER BY id DESC LIMIT $limit OFFSET $offset";
+
+        $stmt = $this->conn->query($sql);
+        $accounts = $stmt->fetch_all(MYSQLI_ASSOC);
+
+        $sqlTotalRows = "select count(*) as total from accounts as acc left join accounts_classes as accl on acc.id = accl.idAccounts left join classes cl on cl.id = accl.idClasses";
+        if (count($conditions) > 0) {
+            $sqlTotalRows .= " WHERE " . implode(" AND ", $conditions);
+        }
+        $stmtTotalRows = $this->conn->query($sqlTotalRows);
+        $totalRows = $stmtTotalRows->fetch_assoc()['total'];
+        $totalPages = ceil($totalRows / $limit);
+
+        return [
+            'accounts' => $accounts,
+            'totalPages' => $totalPages
+        ];
+    }
+
+    function updateRoleAndStatus($dataRow){
+        $conditionRole = isset($dataRow['role']) ? $dataRow['role'] : null;
+        $conditionStatus = isset($dataRow['status']) ? $dataRow['status'] : null;
+        $arrId = $dataRow['arrid'];
+
+        $sql = "UPDATE $this->table SET ";
+        $setConditions = [];
+
+        if ($conditionRole !== null) {
+            $setConditions[] = "roles = $conditionRole"; // Gán trực tiếp giá trị
+        }
+
+        if ($conditionStatus !== null) {
+            $setConditions[] = "statuss = $conditionStatus"; // Gán trực tiếp giá trị
+        }
+        
+        if (empty($setConditions)) {
+            return [
+                'error' => 'No data to update'
+            ];
+        }
+        $sql .= implode(", ", $setConditions);
+        $sql .= " WHERE id IN (" . implode(",", $arrId) . ")";
+
+        try {
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $this->conn->commit();
+            return [
+                'message' => 'Update successful'
+            ];
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            return [
+                'error' => 'Database error'
+            ];
+        }
+    }
+
+    function getAccountsByEmail($dataRow){
+        $email = $dataRow['email'];
+        $sql = "select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
+        left join accounts_classes as accl on acc.id = accl.idAccounts
+        left join classes cl on cl.id = accl.idClasses
+        where email like '%$email%'
+        group by acc.id order by id desc";
+        $stmt = $this->conn->query($sql);
+        $accounts = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $accounts;
     }
 }

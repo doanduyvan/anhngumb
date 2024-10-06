@@ -67,8 +67,7 @@ create table answersCMS(
 create table classes(
 	id int unsigned primary key auto_increment,
     className varchar(255),
-    startDate date,
-    endDate date,
+    statuss tinyint unsigned,
     idCourses int unsigned,
     foreign key(idCourses) references courses(id)
 );

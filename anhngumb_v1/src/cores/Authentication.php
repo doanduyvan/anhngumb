@@ -1,6 +1,7 @@
 <?php
 namespace Cores;
 use Google\Client;
+use \Models\AccountModel;
 class Authentication{
     private $id;
     private $name;
@@ -28,6 +29,16 @@ class Authentication{
             $token = $_COOKIE['user_token_mb'];
             $userData = self::decryption($token);
             if($userData){
+                $accountModel = new AccountModel();
+                $account = $accountModel->getAccountById($userData['id']);
+                if(!$account){
+                  return false;
+                }
+                if($account['statuss'] == 0 || $account['statuss'] == 2){
+                  return false;
+                }
+                $userData['roles'] = $account['roles'];
+                $userData['fullName'] = $account['fullName'];
                 self::setAccountSession($userData);
                 return true;
             }
