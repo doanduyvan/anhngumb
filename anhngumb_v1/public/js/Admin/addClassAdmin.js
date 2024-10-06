@@ -17,10 +17,6 @@ const addClassTemplate = `
                 <option value="">Select Course ID</option>
             </select>
         </div>
-        <div class="fromGroup">
-            <label for="startDate" class="formLabel">Star Date</label>
-            <input type="date" name="startDate" id="startDate" class="formInput">
-        </div>
         <div>
             <button class="btn btn-primary">Add</button>
         </div>
@@ -72,10 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = {
             courseId: document.getElementById("courseId").value,
             className: document.getElementById("className").value,
-            startDate: document.getElementById("startDate").value,
         };
 
-        if (!formData.courseId || !formData.className || !formData.startDate) {
+        if (!formData.courseId || !formData.className) {
             mbNotification("Error", "Please enter all required fields", 3);
             return;
         }

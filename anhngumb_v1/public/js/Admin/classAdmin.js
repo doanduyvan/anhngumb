@@ -47,6 +47,7 @@ const templateroot = `
                         <th>Lesson Name</th>
                         <th>Star Date</th>
                         <th>End Date</th>
+                        <th>Class Details</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -155,6 +156,7 @@ async function renderClass() {
   });
 }
 
+
 // component item tr
 
 function itemtr(item) {
@@ -174,6 +176,7 @@ function itemtr(item) {
                   <td>${item.className}</td>
                   <td>${formattedStartDate}</td>
                   <td>${formattedEndDate}</td>
+                  <td><a href="#">Xem chi tiết</a></td>
                   <td class="td-btn">
                       <button class="btn btn-primary btn-edit-class">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="23" height="23">

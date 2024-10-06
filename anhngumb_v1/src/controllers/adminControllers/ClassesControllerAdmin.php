@@ -70,4 +70,12 @@ class ClassesControllerAdmin
             echo json_encode($class);
         }
     }
+    public function updateStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $datareq = json_decode(file_get_contents('php://input'), true);
+            $class = $this->classModel->updateStatus($datareq);
+            echo json_encode($class);
+        }
+    }
 }

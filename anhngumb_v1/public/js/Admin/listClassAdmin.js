@@ -1,19 +1,26 @@
-import { mbNotification, mbLoading, mbFetch, mbPagination, mbFormData, mbConfirm } from '../allmodule.js';
+import {
+  mbNotification,
+  mbLoading,
+  mbFetch,
+  mbPagination,
+  mbFormData,
+  mbConfirm,
+} from "../allmodule.js";
 
 const divRoot = document.getElementById("root");
 const listClassTemplate = `
  <div class="dv-content">
         <div class="list-Class">
-            <h3 class="list-Class-title">List Lesson</h3>
+            <h3 class="list-Class-title">List Class</h3>
             <div class="course-search">
                 <div class="course-search-box"></div>
             </div>
             <table class="table-class">
                 <thead>
                     <tr>
-                        <th>Lesson Name</th>
-                        <th>Star Date</th>
-                        <th>End Date</th>
+                        <th>Class Name</th>
+                        <th>Class Details</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -116,21 +123,17 @@ async function renderClass() {
 
 function itemtr(item) {
   const tr = document.createElement("tr");
-  // hàm định dạng ngày từ yyyy-mm-dd sang dd-mm-yyyy
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
-  // Sử dụng hàm formatDate để định dạng ngày
-  const formattedStartDate = formatDate(item.startDate);
-  const formattedEndDate = formatDate(item.endDate);
   tr.innerHTML = `
                   <td>${item.className}</td>
-                  <td>${formattedStartDate}</td>
-                  <td>${formattedEndDate}</td>
+                  <td><a href="admin/classdetails">Xem chi tiết</a></td>
+                  <td>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="toggleSwitch-${item.id}">
+                      <div class="toggle-switch-background">
+                        <div class="toggle-switch-handle"></div>
+                      </div>
+                    </label>
+                  </td>
                   <td class="td-btn">
                       <button class="btn btn-primary btn-edit-class">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="23" height="23">
@@ -146,6 +149,37 @@ function itemtr(item) {
           `;
   const btnedit = tr.querySelector(".btn-edit-class");
   const btndel = tr.querySelector(".btn-del-class");
+  const toggleSwitch = tr.querySelector(`#toggleSwitch-${item.id}`);
+  
+  if (toggleSwitch) {
+    toggleSwitch.checked = Number(item.statuss) === 1;
+    toggleSwitch.onchange = async function () {
+      const statuss = this.checked ? 1 : 0;
+      console.log(
+        `Đang thay đổi trạng thái của lớp ${item.id} thành: ${statuss}`
+      );
+      const url = "admin/classes/updateStatus";
+      const datareq = { id: item.id, statuss };
+      console.log(datareq);
+      try {
+        const datares = await mbFetch(url, datareq);
+        console.log(datares);
+        if (datares.error) {
+          console.log(datares.error);
+          mbNotification("Error", datares.error, 2, 2);
+        } else {
+          mbNotification("Success", "Cập nhật trạng thái thành công", 1, 2);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  } else {
+    console.error(
+      `Công tắc chuyển đổi id toggleSwitch-${item.id} không tồn tại`
+    );
+  }
+
   btnedit.onclick = async function () {
     const data = await showFormEditClass(item);
     if (data) {
@@ -167,7 +201,6 @@ function itemtr(item) {
   };
   return tr;
 }
-
 // sửa khóa học
 function showFormEditClass(data) {
   return new Promise((resolve) => {
@@ -235,9 +268,12 @@ async function removeClass(Class) {
     }
   });
 }
+
 const selectItemPerPage = document.querySelector(
-    ".list-class-pagination-container-select select"
-  );
-  selectItemPerPage.addEventListener("change", function () {
-    proxyCourse.itemPerPage = parseInt(this.value);
-  });
+  ".list-class-pagination-container-select select"
+);
+selectItemPerPage.addEventListener("change", function () {
+  proxyCourse.itemPerPage = parseInt(this.value);
+});
+
+
