@@ -44,6 +44,4 @@ class DashboardControllerAdmin{
         echo json_encode($course);
     }
 
-
-
 }

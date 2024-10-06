@@ -166,12 +166,12 @@ class ViewLayout extends ViewsBase
                     [
                         'id' => 2.1,
                         'name' => 'Add Class',
-                        'link' => 'admin/classes/tets'
+                        'link' => 'admin/classes/addClassAdmin'
                     ],
                     [
                         'id' => 2.2,
                         'name' => 'List Class',
-                        'link' => '#'
+                        'link' => 'admin/classes/listClassAdmin'
                     ]
                 ]
             ],

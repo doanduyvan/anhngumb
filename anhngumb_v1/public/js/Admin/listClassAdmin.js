@@ -1,53 +1,26 @@
 import {
   mbNotification,
-  mbConfirm,
   mbLoading,
   mbFetch,
   mbPagination,
   mbFormData,
+  mbConfirm,
 } from "../allmodule.js";
 
-// dùng để hiển thị ra template trước khi gọi tới DOM
 const divRoot = document.getElementById("root");
-const templateroot = `
-    <div class="dv-content">
-        <div class="addClass">
-            <button class="btn btn-primary btn-addClass">Add Lesson</button>
-            <div class="addClass-box">
-                <form action="" class="addClass-form">
-        <div class="fromGroup">
-            <label for="className" class="formLabel">Lesson Name</label>
-            <input type="text" id="className" name="className" class="formInput" placeholder="Enter lesson name">
-        </div>
-        <div class="fromGroup">
-            <label for="courseId" class="formLabel">Courses ID</label>
-            <select id="courseId" name="courseId" class="formInput">
-                <option value="">Select Course ID</option>
-            </select>
-        </div>
-        <div class="fromGroup">
-            <label for="startDate" class="formLabel">Star Date</label>
-            <input type="date" name="startDate" id="startDate" class="formInput">
-        </div>
-        <div>
-            <button class="btn btn-primary">Add</button>
-        </div>
-    </form>
-                <button class="addClass-box-btn-close">⬆️</button>
-            </div>
-        </div>
+const listClassTemplate = `
+ <div class="dv-content">
         <div class="list-Class">
-            <h3 class="list-Class-title">List Lesson</h3>
+            <h3 class="list-Class-title">List Class</h3>
             <div class="course-search">
                 <div class="course-search-box"></div>
             </div>
             <table class="table-class">
                 <thead>
                     <tr>
-                        <th>Lesson Name</th>
-                        <th>Star Date</th>
-                        <th>End Date</th>
+                        <th>Class Name</th>
                         <th>Class Details</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -69,18 +42,8 @@ const templateroot = `
     </div>
     <div class="dv-edit-class-container"></div>
         `;
-divRoot.innerHTML = templateroot;
 
-// dùng để số box thêm khóa học
-const EaddClass = document.querySelector(".addClass");
-const btnaddClass = document.querySelector(".btn-addClass");
-const closeboxaddClass = document.querySelector(".addClass-box-btn-close");
-btnaddClass.addEventListener("click", () => {
-  EaddClass.classList.add("show");
-});
-closeboxaddClass.addEventListener("click", () => {
-  EaddClass.classList.remove("show");
-});
+divRoot.innerHTML = listClassTemplate;
 
 let coursesGlobal = [];
 
@@ -156,27 +119,21 @@ async function renderClass() {
   });
 }
 
-
 // component item tr
 
 function itemtr(item) {
   const tr = document.createElement("tr");
-  // hàm định dạng ngày từ yyyy-mm-dd sang dd-mm-yyyy
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
-  // Sử dụng hàm formatDate để định dạng ngày
-  const formattedStartDate = formatDate(item.startDate);
-  const formattedEndDate = formatDate(item.endDate);
   tr.innerHTML = `
                   <td>${item.className}</td>
-                  <td>${formattedStartDate}</td>
-                  <td>${formattedEndDate}</td>
-                  <td><a href="#">Xem chi tiết</a></td>
+                  <td><a href="admin/classdetails">Xem chi tiết</a></td>
+                  <td>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="toggleSwitch-${item.id}">
+                      <div class="toggle-switch-background">
+                        <div class="toggle-switch-handle"></div>
+                      </div>
+                    </label>
+                  </td>
                   <td class="td-btn">
                       <button class="btn btn-primary btn-edit-class">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="23" height="23">
@@ -192,6 +149,37 @@ function itemtr(item) {
           `;
   const btnedit = tr.querySelector(".btn-edit-class");
   const btndel = tr.querySelector(".btn-del-class");
+  const toggleSwitch = tr.querySelector(`#toggleSwitch-${item.id}`);
+  
+  if (toggleSwitch) {
+    toggleSwitch.checked = Number(item.statuss) === 1;
+    toggleSwitch.onchange = async function () {
+      const statuss = this.checked ? 1 : 0;
+      console.log(
+        `Đang thay đổi trạng thái của lớp ${item.id} thành: ${statuss}`
+      );
+      const url = "admin/classes/updateStatus";
+      const datareq = { id: item.id, statuss };
+      console.log(datareq);
+      try {
+        const datares = await mbFetch(url, datareq);
+        console.log(datares);
+        if (datares.error) {
+          console.log(datares.error);
+          mbNotification("Error", datares.error, 2, 2);
+        } else {
+          mbNotification("Success", "Cập nhật trạng thái thành công", 1, 2);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  } else {
+    console.error(
+      `Công tắc chuyển đổi id toggleSwitch-${item.id} không tồn tại`
+    );
+  }
+
   btnedit.onclick = async function () {
     const data = await showFormEditClass(item);
     if (data) {
@@ -213,7 +201,6 @@ function itemtr(item) {
   };
   return tr;
 }
-
 // sửa khóa học
 function showFormEditClass(data) {
   return new Promise((resolve) => {
@@ -282,90 +269,11 @@ async function removeClass(Class) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const addClassForm = document.querySelector(".addClass-form");
-  const EaddClass = document.querySelector(".addClass");
-  const btnaddClass = document.querySelector(".btn-addClass");
-  const closeboxaddClass = document.querySelector(".addClass-box-btn-close");
-
-  btnaddClass.addEventListener("click", () => {
-    EaddClass.classList.add("show");
-  });
-
-  closeboxaddClass.addEventListener("click", () => {
-    EaddClass.classList.remove("show");
-  });
-
-  async function fetchCourses() {
-    const url = "admin/courses/getallcourses";
-    try {
-      const courses = await mbFetch(url);
-      // console.log("ghi chu 229: ",courses);
-      coursesGlobal = courses;
-      const courseSelect = document.getElementById("courseId");
-
-      courses.forEach((course) => {
-        const option = document.createElement("option");
-        option.value = course.id;
-        option.textContent = course.courseName;
-        courseSelect.appendChild(option);
-      });
-    } catch (err) {
-      console.error("Error fetching courses:", err);
-    }
-  }
-
-  fetchCourses();
-
-  addClassForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const formData = {
-      courseId: document.getElementById("courseId").value,
-      className: document.getElementById("className").value,
-      startDate: document.getElementById("startDate").value,
-    };
-    console.log(formData.startDate);
-    if (!formData.courseId || !formData.className || !formData.startDate) {
-      mbNotification("Error", "Please enter all required fields", 3);
-      return;
-    }
-
-    const url = "admin/classes/addClass";
-    try {
-      const data = await mbFetch(url, formData);
-      console.log(data);
-
-      if (data.error) {
-        console.log(data.error);
-        mbNotification("Error", data.error, 2, 2);
-      } else {
-        const tbody = document.getElementById("tbody-class");
-        if (!tbody) {
-          console.error("Element #tbody-class không tồn tại.");
-          return;
-        }
-        const newtr = itemtr(data);
-
-        if (tbody.firstChild) {
-          tbody.insertBefore(newtr, tbody.firstChild);
-        } else {
-          tbody.appendChild(newtr);
-        }
-        mbNotification("Success", "Add class success", 1, 2);
-        addClassForm.reset();
-      }
-    } catch (err) {
-      console.log(err);
-      mbNotification("Error", "An error occurred while adding the lesson", 3);
-    } finally {
-      EaddClass.classList.remove("show");
-    }
-  });
-});
-
 const selectItemPerPage = document.querySelector(
   ".list-class-pagination-container-select select"
 );
 selectItemPerPage.addEventListener("change", function () {
   proxyCourse.itemPerPage = parseInt(this.value);
 });
+
+
