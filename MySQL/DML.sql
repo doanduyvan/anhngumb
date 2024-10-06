@@ -53,7 +53,7 @@ insert into accounts_classes (idAccounts,idClasses,statuss) values
 
 
 
-select * from courses;
+select * from classes;
 
 
 

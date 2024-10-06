@@ -37,8 +37,13 @@ LEFT JOIN
 GROUP BY 
     acc.id;
 
+-- tim kiem bang email 
 
-
+select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
+        left join accounts_classes as accl on acc.id = accl.idAccounts
+        left join classes cl on cl.id = accl.idClasses
+        where email like "%ta%"
+        group by acc.id order by id desc;
         
         
         
