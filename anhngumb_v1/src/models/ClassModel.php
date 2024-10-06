@@ -39,14 +39,8 @@ class ClassModel{
 
     public function addClass($dataRow){
         $className = $dataRow['className'];
-        $startDate = $dataRow['startDate'];
         $idCourses = $dataRow['courseId'];
-
-        // tính toán ngày kết thúc 3 tháng sau ngày bắt đầu
-        $date = new \DateTime($startDate);
-        $date->modify('+ 3 months');
-        $endDate = $date->format('Y-m-d'); // chuyển định dạng thành yyyy-mm-dd
-        $sql = "INSERT INTO $this->table (className, startDate, endDate, idCourses) VALUES ('$className', '$startDate', '$endDate','$idCourses')";
+        $sql = "INSERT INTO $this->table (className, statuss, idCourses) VALUES ('$className', 1,'$idCourses')";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
@@ -65,7 +59,7 @@ class ClassModel{
     public function editClass($dataRow){
         $classId = $dataRow['id'];
         $className = $dataRow['className'];
-        $sql = "UPDATE $this->table SET className = '$className'  WHERE id = $classId";
+        $sql = "UPDATE $this->table SET className = '$className' WHERE id = $classId";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
@@ -109,4 +103,22 @@ class ClassModel{
     }
 
 
+    public function updateStatus($dataRow){
+        
+        $classId = $dataRow['id'];
+        $statuss = $dataRow['statuss'];
+        $sql = "UPDATE $this->table SET statuss = '$statuss' WHERE id = $classId";
+        try {
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $newClass = $this->getClassesById($classId);
+            $this->conn->commit();
+            return $newClass;
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            return [
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

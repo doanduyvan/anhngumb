@@ -14,7 +14,7 @@ class DashboardController
     }
 
     public function dashboar1(){
-        $dashboard = new \Views\ViewLayout('Đoàn Duy Vấn',0);
+        $dashboard = new \Views\ViewLayout();
         $dashboard->setTitle('Dashboard - AnhnguMB');
         $dashboard->setActivePage(1);
         $dashboard->render();
