@@ -123,7 +123,7 @@ class ViewLayout extends ViewsBase
                 'submenu' => null
             ],
             [
-                'id' => 4,
+                'id' => 15,
                 'name' => 'Log Out',
                 'svg' => file_get_contents("public/svgs/logout.svg"),
                 'link' => 'logout',
@@ -156,7 +156,13 @@ class ViewLayout extends ViewsBase
                 'link' => 'admin/lessons',
                 'submenu' => null
             ],
-            
+            [
+                'id' => 9,
+                'name' => 'Quizzes',
+                'svg' => file_get_contents("public/svgs/quiz.svg"),
+                'link' => 'admin/quizzes',
+                'submenu' => null
+            ],
             [
                 'id' => 2,
                 'name' => 'Classes',
@@ -190,7 +196,7 @@ class ViewLayout extends ViewsBase
                 'submenu' => null
             ],
             [
-                'id' => 5,
+                'id' => 15,
                 'name' => 'Log Out',
                 'svg' => file_get_contents("public/svgs/logout.svg"),
                 'link' => 'logout',
@@ -234,7 +240,7 @@ class ViewLayout extends ViewsBase
                     <input type="checkbox" hidden class="list-ul-input-check-submenu" id="submenu_<?= $key ?>" <?= $this->idParentPage == $menu['id'] && $this->idChildPage != null ? 'checked' : '' ?>>
                 <?php endif; ?>
                 <div class="list-ul-primary-menu">
-                    <a class="<?= $this->idParentPage == $menu['id'] && $this->idChildPage == null ? 'active' : '' ?>" href="<?= $menu['link'] ?>">
+                    <a class="<?= $this->idParentPage == $menu['id'] && $this->idChildPage == null ? 'active' : '' ?>" href="<?= $menu['link'] ?>" id="<?= $menu['id'] === 15 ? 'mblogout' : '' ?>">
                         <span> <?= $menu['svg'] ?> </span>
                         <span><?= $menu['name'] ?></span>
                     </a>
