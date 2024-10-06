@@ -191,100 +191,14 @@ function removeTokensFromUrl() {
 function linkGoogle(){
     const clientId = '865532873608-aik1oar7v5gimbu4m84dcl2aj8me92ih.apps.googleusercontent.com';
     const client_Uri = 'http://localhost/Workspace/anhngumb/anhngumb_v1/';
+    // const client_Uri = 'http://localhost/anhngumb/anhngumb_v1/';
     const scope = 'openid%20https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile';
     const nonce = Math.random().toString(36).substring(2); // Tạo nonce ngẫu nhiên
     return  `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&response_type=id_token%20token&redirect_uri=${client_Uri}&client_id=${clientId}&nonce=${nonce}`;
 }
 
-// code fail
-function sendSignUp(email,password){
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    }
-    myFetch('?signup',data => {
-        if(data.error){
-            showNotif('Error',data.error,2,2000);
-            return;
-        }
-        console.log(data);
-        formSignUp.reset();
-        changeAuth(0);
-        showNotif('Success','Sign up success',0,2500);
-    },options);
-}
-
-
-function sendSignIn(email,password){
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    };
-    myFetch('?signin',data => {
-        if(data.error){
-            showNotif('Error',data.error,2,2000);
-            return;
-        }
-        console.log(data);
-        formSignIn.reset();
-        showNotif('Success','Sign in success',0,2500);
-    },options);
-}
-
-function myFetch(url,callback,options = {}){
-    loading(true);
-    fetch(url,options)
-    .then(res => res.json())
-    .then(data => {
-        loading(false);
-        callback(data);
-    })
-    .catch(err => {
-        loading(false);
-        console.error("My Error: " + err);
-    })
-}
-
-function sendSignInGoogle(id_token){
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            idToken: id_token
-        })
-    }
-    myFetch('?signin&google',data => {
-        if(data.error){
-            showNotif('Error',data.error,2,2000);
-            return;
-        }
-        console.log(data);
-        showNotif('Success','Sign in success',0,2500);
-    },options);
-}
-
-// clode fail code
-
-
-
 
 // library
-
-
 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
