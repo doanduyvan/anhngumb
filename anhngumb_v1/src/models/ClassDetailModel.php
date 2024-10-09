@@ -1,6 +1,10 @@
 <?php
+
 namespace Models;
-class ClassDetailModel{
+
+class ClassDetailModel
+{
+
     private $conn = null;
     private $table = 'accounts_classes';
 
@@ -8,31 +12,68 @@ class ClassDetailModel{
     {
         $this->conn = BaseModel::getInstance();
     }
-
-    public function getClassDetails($itemsPerPage, $currentPage)
+    public function getAccountName($idAccounts)
     {
-        $offset = ($currentPage - 1) * $itemsPerPage;
-        $totalLessons = $this->gettotalAcc();
-        $totalPages = ceil($totalLessons / $itemsPerPage);
-        $sql = "SELECT * FROM $this->table ORDER BY id DESC LIMIT $itemsPerPage OFFSET $offset";
+        $sql = "SELECT * FROM accounts where id = $idAccounts";
         $stmt = $this->conn->query($sql);
-        $lessons = $stmt->fetch_all(MYSQLI_ASSOC);
-        return [
-            'accounts_classes' => $lessons,
-            'totalPages' => $totalPages
-        ];
+        $class = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $class;
+    }
+    public function getClassDetails($classId)
+    {
+$sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from accounts_classes as ac 
+inner join classes as c on c.id = ac.idClasses
+inner join accounts as a on a.id = ac.idAccounts
+where ac.idClasses = $classId AND ac.statuss = 1";
+        // $stmt = $this->conn->prepare($sql);
+        // $stmt->bind_param("i", $classId);
+        // $stmt->execute();
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $result;
     }
 
-    public function gettotalAcc(){
+
+    public function getClassesById($classId)
+    {
+        $sql = "SELECT * FROM $this->table WHERE id = $classId";
+        $stmt = $this->conn->query($sql);
+        $course = $stmt->fetch_assoc();
+        return $course;
+    }
+
+    public function getTotalClasses()
+    {
         $totalItemsQuery = $this->conn->query("SELECT COUNT(*) as total FROM $this->table");
         $totalItems = $totalItemsQuery->fetch_assoc();
         return $totalItems['total'];
     }
 
+    public function addClass($dataRow)
+    {
+        $className = $dataRow['className'];
+        $idCourses = $dataRow['courseId'];
+        $sql = "INSERT INTO $this->table (className, statuss, idCourses) VALUES ('$className', 1,'$idCourses')";
+        try {
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $newClassId = $this->conn->insert_id;
+            $newClass = $this->getClassesById($newClassId);
+            $this->conn->commit();
+            return $newClass;
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            return [
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 
-    public function deleteClassDetail($dataRow){
-        $accounts_classeId = $dataRow['id'];
-        $sql = "DELETE FROM $this->table WHERE id = $accounts_classeId";
+    public function deleteClassDetail($dataRow)
+    {
+        $classDetailId = $dataRow['idAccounts'];
+        $sql = "DELETE FROM $this->table WHERE idAccounts = $classDetailId";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
@@ -44,5 +85,5 @@ class ClassDetailModel{
                 'error' => $e->getMessage()
             ];
         }
-}
+    }
 }

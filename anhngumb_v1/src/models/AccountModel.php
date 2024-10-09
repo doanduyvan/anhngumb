@@ -262,7 +262,6 @@ class AccountModel
             ];
         }
     }
-
     function getAccountsByEmail($dataRow){
         $email = $dataRow['email'];
         $sql = "select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
