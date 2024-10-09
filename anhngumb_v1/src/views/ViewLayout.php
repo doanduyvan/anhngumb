@@ -83,7 +83,7 @@ class ViewLayout extends ViewsBase
                 'id' => 2,
                 'name' => 'Classes',
                 'svg' => file_get_contents("public/svgs/class.svg"),
-                'link' => '',
+                'link' => 'classes',
                 'submenu' => [
                     [
                         'id' => 2.1,
