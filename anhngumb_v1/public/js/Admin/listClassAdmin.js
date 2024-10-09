@@ -91,12 +91,10 @@ async function renderClass() {
 
   const tbdyclass = document.createElement("tbody");
   tbdyclass.id = "tbody-class";
-  data.forEach((item) => {
-    console.log(item);
-    const tr = itemtr(item);
-    tbdyclass.appendChild(tr);
-  });
-
+    data.forEach((item) => {
+      const tr = itemtr(item);
+      tbdyclass.appendChild(tr);
+    });
   const tbodyold = document.getElementById("tbody-class");
   tbodyold.replaceWith(tbdyclass);
 
@@ -125,7 +123,7 @@ function itemtr(item) {
   const tr = document.createElement("tr");
   tr.innerHTML = `
                   <td>${item.className}</td>
-                  <td><a href="admin/classdetails">Xem chi tiết</a></td>
+                   <td><a href="admin/classdetails?classId=${item.id}">Xem chi tiết</a></td>   
                   <td>
                     <label class="toggle-switch">
                       <input type="checkbox" id="toggleSwitch-${item.id}">
@@ -147,10 +145,10 @@ function itemtr(item) {
                       </button>
                   </td>
           `;
+          console.log(item.id);
   const btnedit = tr.querySelector(".btn-edit-class");
   const btndel = tr.querySelector(".btn-del-class");
   const toggleSwitch = tr.querySelector(`#toggleSwitch-${item.id}`);
-  
   if (toggleSwitch) {
     toggleSwitch.checked = Number(item.statuss) === 1;
     toggleSwitch.onchange = async function () {
@@ -199,6 +197,7 @@ function itemtr(item) {
       tr.remove();
     }
   };
+
   return tr;
 }
 // sửa khóa học

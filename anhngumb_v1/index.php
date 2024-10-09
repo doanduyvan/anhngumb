@@ -31,6 +31,14 @@ define("WEB_ROOT", $_ENV['HTTP_ROOT']);
 
 new Cores\Router();
 
+// $test = new \Models\ClassDetailModel();
+
+// $data = $test->getClassDetails(1);
+
+// echo "<pre>";
+// print_r($data);
+// echo "</pre>";
+
 
 
 

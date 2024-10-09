@@ -18,8 +18,6 @@ class AccountsControllerAdmin
         $accounts->templatehtml = file_get_contents("public/temphtml/tempadmin/accountadmin.html");
         $accounts->render();
     }
-
-
     // Các phương thức dành cho ajax
 
     public function getClassActive(){
@@ -52,4 +50,6 @@ class AccountsControllerAdmin
             echo json_encode($dataResponse);
         }
     }
+
+    
 }
