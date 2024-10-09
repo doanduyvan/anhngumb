@@ -3,7 +3,7 @@ session_start();
 define('DIR_ROOT', __DIR__);
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 $currentDateTime = date('H:i:s d-m-Y');
-define("NOW",$currentDateTime);
+define("NOW", $currentDateTime);
 
 // dành cho localhost
 // $web_root = "";
@@ -21,7 +21,9 @@ define("NOW",$currentDateTime);
 
 
 include_once __DIR__ . '/vendor/autoload.php';
+
 use Dotenv\Dotenv;
+
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
@@ -43,9 +45,28 @@ new Cores\Router();
 
 
 
-
-
-
-
+$test = [
+    [
+        'idClass' => 1,
+        'className' => 'Lớp 1',
+        'idStudent' => 1,
+        'fullName' => 'Nguyễn Văn A',
+        'createdAt' => '2021-09-01 12:00:00',
+    ],
+    [
+        'idClass' => 1,
+        'className' => 'Lớp 1',
+        'idStudent' => 2,
+        'fullName' => 'Nguyễn Văn A',
+        'createdAt' => '2021-09-01 12:00:00',
+    ],
+    [
+        'idClass' => 1,
+        'className' => 'Lớp 1',
+        'idStudent' => 3,
+        'fullName' => 'Nguyễn Văn A',
+        'createdAt' => '2021-09-01 12:00:00',
+    ]
+];
 
 

@@ -46,7 +46,22 @@ select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  
         group by acc.id order by id desc;
         
         
+-- lay bai hoc theo khoa hoc
+
+select * from lessons where idCourses = 1;
         
+        
+-- sql quiz
+
+select * from quizzescms
+left join mediacms on quizzescms.id = mediacms.idQuizzescms
+join questionscms as qtcms on qtcms.idQuizzescms = quizzescms.id
+join answersCMS as ans on qtcms.id = ans.idQuestionsCMS order by quizzescms.id desc;
+
+select * from quizzescms order by id desc;
+
+
+
         
         
         
