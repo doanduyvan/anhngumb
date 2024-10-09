@@ -3,10 +3,12 @@ namespace AdminControllers;
 class QuizzesControllerAdmin{
 
     private $quizView;
+    private $quizModel;
 
     function __construct()
     {
         $this->quizView = new \Views\ViewLayout();
+        $this->quizModel = new \Models\QuizzesCMSModel();
     }
 
     function index(){
@@ -29,5 +31,13 @@ class QuizzesControllerAdmin{
         $lessons = new \Models\LessonModel();
         $lessons = $lessons->getLessonByCourseId($idCourse);
         echo json_encode($lessons);
+    }
+
+    function addQuiz(){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $dataReq = json_decode(file_get_contents('php://input'), true);
+            $dataRes = $this->quizModel->addQuiz($dataReq);
+            echo json_encode($dataRes);
+        }
     }
 }

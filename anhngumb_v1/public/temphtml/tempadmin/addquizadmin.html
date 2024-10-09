@@ -53,7 +53,7 @@
         flex-wrap: wrap;
         align-items: end;
         justify-content: end;
-        gap: 20px;
+        gap: 10px;
     }
 
     .dv-addquiz .choose-course-lesson .form-group {
@@ -287,10 +287,9 @@
     }
 
     .dv-border-red {
-        border: 1px dashed red;
-        border-radius: 5px;
+        border: 1px dashed red !important;
+        border-radius: 5px !important;
     }
-
 </style>
 
 <div class="dv-addquiz">
@@ -314,7 +313,8 @@
             <div class="dv-quiz-name">
                 <div class="form-group">
                     <label for="txtSearch">Quiz Name</label>
-                    <input type="text" name="question" id="question" class="form-control" placeholder="Enter Quiz Name">
+                    <input type="text" name="question" id="quiz-name" class="form-control"
+                        placeholder="Enter Quiz Name">
                 </div>
             </div>
 
@@ -514,7 +514,7 @@
                 optiondefault.textContent = 'No lesson';
                 EselectLesson.appendChild(optiondefault);
                 return;
-            }else{
+            } else {
                 optiondefault.textContent = 'Please choose lesson';
                 EselectLesson.appendChild(optiondefault);
             }
@@ -538,6 +538,17 @@
         const idLesson = e.target.value || null;
         Quizzes.idLesson = parseInt(idLesson);
     }
+
+    // add quiz name 
+
+    (() => {
+        const quizName = document.getElementById('quiz-name');
+        quizName.oninput = function (e) {
+            let value = e.target.value;
+            value = value.trim();
+            Quizzes.quizName = value || null;
+        }
+    })();
 
     // add media
 
@@ -602,29 +613,150 @@
             boxQuestion.appendChild(componentQuestionWrite());
         });
 
-    })()
+    })();
+
+    const removeBorderRed = (e) => {
+        const arrBorderRed = document.querySelectorAll('.dv-border-red');
+        arrBorderRed.forEach((item) => {
+            item.classList.remove('dv-border-red');
+        });
+        document.removeEventListener('click', removeBorderRed);
+    }
 
     // submit
 
     const formAddQuiz = document.getElementById('dv-form-addquiz');
     formAddQuiz.addEventListener('submit', async function (e) {
         e.preventDefault();
-        console.log(Quizzes);
-        // const main = document.querySelector('main');
+        // console.log(Quizzes);
         // validate Quizzes để gửi lên server
-        if(Quizzes.idLesson === null){
+        if (Quizzes.idLesson === null) {
             mbNotification('Warrning', 'Please choose lesson', 3, 2);
-            // và cuộn lên đầu trang và thêm class khung viền đỏ, cuộn trong tag main, thì tag main chỉ dài tối đa bằng màn hình và được overflow-y: auto
-            const boxlesson = document.getElementById('box-lesson');
+            const boxlesson = document.getElementById('id-lesson-filter');
             boxlesson.scrollIntoView({ behavior: 'smooth', block: 'center' });
             boxlesson.classList.add('dv-border-red');
-            // làm sao xóa class-border-red sau khi người dùng thực hiện click chuột vào bất kì đâu
-            
+            document.addEventListener('click', removeBorderRed);
             return;
         }
+
+        if (Quizzes.quizName === null) {
+            mbNotification('Warrning', 'Please enter quiz name', 3, 2);
+            const quizName = document.getElementById('quiz-name');
+            quizName.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            quizName.classList.add('dv-border-red');
+            document.addEventListener('click', removeBorderRed);
+            return;
+        }
+
+        if (Quizzes.media !== null) {
+            const typeMedia = Quizzes.media.type;
+            const mesaage = typeMedia == 0 ? 'Please choose file audio' : 'Please enter content text';
+            if (Quizzes.media.content === null) {
+                mbNotification('Warrning', mesaage, 3, 2);
+                const boxMedia = document.querySelector('#box-media');
+                boxMedia.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                boxMedia.classList.add('dv-border-red');
+                document.addEventListener('click', removeBorderRed);
+                return;
+            }
+        }
+
+        if(Quizzes.questions.length === 0){
+            mbNotification('Warrning', 'Please add question', 3, 2);
+            return;
+        }
+
+        for(let i = 0; i < Quizzes.questions.length; i++){
+            const question = Quizzes.questions[i];
+            const boxQuestion = document.getElementById('box-question-' + question.idtmp);
+            if(question.questionName === null){
+                mbNotification('Warrning', 'Please enter question name', 3, 2);
+                boxQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                boxQuestion.classList.add('dv-border-red');
+                document.addEventListener('click', removeBorderRed);
+                return;
+            }
+
+            if(question.typeAnswers === 0){
+                let isCorrect = false;
+                for(let j = 0; j < question.answers.length; j++){
+                    const answer = question.answers[j];
+                    if(answer.answerName === null){
+                        mbNotification('Warrning', 'Please enter answer name', 3, 2);
+                        boxQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        boxQuestion.classList.add('dv-border-red');
+                        document.addEventListener('click', removeBorderRed);
+                        return;
+                    }
+                    if(answer.isCorrect){
+                        isCorrect = true;
+                    }
+                }
+                if(!isCorrect){
+                    mbNotification('Warrning', 'Please choose answer correct', 3, 2);
+                    boxQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    boxQuestion.classList.add('dv-border-red');
+                    document.addEventListener('click', removeBorderRed);
+                    return;
+                }
+            }else if(question.typeAnswers === 1){
+                if(question.answers.answerName === null){
+                    mbNotification('Warrning', 'Please enter answer name', 3, 2);
+                    boxQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    boxQuestion.classList.add('dv-border-red');
+                    document.addEventListener('click', removeBorderRed);
+                    return;
+                }
+                if(question.answers.answerName === null){
+                    mbNotification('Warrning', 'Please enter answer name', 3, 2);
+                    boxQuestion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    boxQuestion.classList.add('dv-border-red');
+                    document.addEventListener('click', removeBorderRed);
+                    return;
+                }
+            }
+        }
+
+        // gửi lên server
+
+        const main = document.querySelector('main');
+        try{
+            mbLoading(true);
+            const dataRes = await mbFetch('admin/quizzes/addQuiz',Quizzes);
+            if(dataRes.error){
+                console.error('DuyVan: ',dataRes.error);
+                mbNotification('Error',dataRes.error,2,2.5);
+                return;
+            }
+            mbNotification('Success',dataRes.message,1,2.5);
+            resetPage();
+        }catch(error){
+            console.log(error);
+        }finally{
+            mbLoading(false);
+        }
+
+
+
     });
 
 
+
+    // reset new quiz
+
+    function resetPage(){
+    Quizzes.idLesson = null;
+    Quizzes.quizName = null;
+    Quizzes.media = null;
+    Quizzes.questions = [];
+    questionIdCounter = 0;
+    const boxMedia = document.getElementById('box-media');
+    emptyElement(boxMedia);
+    const boxQuestion = document.getElementById('quiz-list-question');
+    emptyElement(boxQuestion);
+    const form = document.getElementById('dv-form-addquiz');
+    form.reset();
+    }
 
 
     // compoent
@@ -684,7 +816,7 @@
         const html = `
                             <div class="form-group">
                         <label for="">Title media</label>
-                        <input type="text" name="titletext" id="question" class="form-control" placeholder="Enter title text">
+                        <input type="text" name="titletext" id="" class="form-control" placeholder="Enter title text">
                     </div>
                     <div class="form-group">
                         <label for="">Content Media</label>
@@ -695,14 +827,16 @@
 
         const titleText = div.querySelector('input[name=titletext]');
         titleText.oninput = function (e) {
-            const value = e.target.value;
+            let value = e.target.value;
+            value = value.trim();
             Quizzes.media.title = value;
         }
         const contentText = div.querySelector('textarea');
         contentText.oninput = function (e) {
-            const value = e.target.value;
+            let value = e.target.value;
+            value = value.trim();
             const formattedText = value.replace(/\n/g, '<br>');
-            Quizzes.media.content = formattedText;
+            Quizzes.media.content = formattedText || null;
         }
         return div;
     }
@@ -739,6 +873,7 @@
 
         const div = document.createElement('div');
         div.classList.add('dv-question-choose');
+        div.id = 'box-question-' + currentId;
         const html = `
                     <div class="dv-question-info">
                         <span>Question Choose</span>
@@ -749,19 +884,19 @@
                     <input type="text" placeholder="Question Name" name="name">
                     <div class="answers">
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="">
+                            <input type="radio" name="answer_${currentId}" id="">
                             <input type="text" placeholder="Answer 1">
                         </div>
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="">
+                            <input type="radio" name="answer_${currentId}" id="">
                             <input type="text" placeholder="Answer 2">
                         </div>
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="">
+                            <input type="radio" name="answer_${currentId}" id="">
                             <input type="text" placeholder="Answer 3">
                         </div>
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="">
+                            <input type="radio" name="answer_${currentId}" id="">
                             <input type="text" placeholder="Answer 4">
                         </div>
                     </div>
@@ -827,6 +962,7 @@
 
         const div = document.createElement('div');
         div.classList.add('dv-question-choose', 'true-false');
+        div.id = 'box-question-' + currentId;
         const html = `
                     <div class="dv-question-info">
                         <span>Question True/False</span>
@@ -837,11 +973,11 @@
                     <input type="text" placeholder="Question Name" name="question">
                     <div class="answers">
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="" value="1">
+                            <input type="radio" name="answer_${currentId}" id="" value="1">
                             <input type="text" placeholder="Answer 1" value="True" disabled>
                         </div>
                         <div class="group-answer">
-                            <input type="radio" name="answer" id="" value="0">
+                            <input type="radio" name="answer_${currentId}" id="" value="0">
                             <input type="text" placeholder="Answer 2" value="False" disabled>
                         </div>
                     </div>
@@ -890,9 +1026,10 @@
 
         const div = document.createElement('div');
         div.classList.add('dv-question-write');
+        div.id = 'box-question-' + currentId;
         const html = `
                     <div class="dv-question-info">
-                        <span>Question True/False</span>
+                        <span>Question Write</span>
                         <div class="dv-question-option">
                             <button type="button" class="btn btn-danger" name="del-question" >Delete</button>
                         </div>
