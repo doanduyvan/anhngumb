@@ -121,4 +121,15 @@ class ClassModel{
             ];
         }
     }
+
+    public function getClassesByUser($idUser){
+        $sql = "select c.className, c.id as idClass from classes c 
+        inner join accounts_classes ac on c.id = ac.idClasses
+        where ac.idAccounts = $idUser and ac.statuss = 1
+        order by c.id desc";
+        $stmt = $this->conn->query($sql);
+        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $classes;
+    }
+
 }

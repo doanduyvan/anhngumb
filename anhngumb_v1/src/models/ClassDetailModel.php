@@ -21,13 +21,11 @@ class ClassDetailModel
     }
     public function getClassDetails($classId)
     {
-$sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from accounts_classes as ac 
-inner join classes as c on c.id = ac.idClasses
-inner join accounts as a on a.id = ac.idAccounts
-where ac.idClasses = $classId AND ac.statuss = 1";
-        // $stmt = $this->conn->prepare($sql);
-        // $stmt->bind_param("i", $classId);
-        // $stmt->execute();
+        $classId = $this->conn->real_escape_string($classId);
+        $sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from accounts_classes as ac 
+        inner join classes as c on c.id = ac.idClasses
+        inner join accounts as a on a.id = ac.idAccounts
+        where ac.idClasses = $classId AND ac.statuss = 1";
         $stmt = $this->conn->query($sql);
         $result = $stmt->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
@@ -37,6 +35,7 @@ where ac.idClasses = $classId AND ac.statuss = 1";
 
     public function getClassesById($classId)
     {
+        $classId = $this->conn->real_escape_string($classId);
         $sql = "SELECT * FROM $this->table WHERE id = $classId";
         $stmt = $this->conn->query($sql);
         $course = $stmt->fetch_assoc();
@@ -54,6 +53,8 @@ where ac.idClasses = $classId AND ac.statuss = 1";
     {
         $className = $dataRow['className'];
         $idCourses = $dataRow['courseId'];
+        $className = $this->conn->real_escape_string($className);
+        $idCourses = $this->conn->real_escape_string($idCourses);
         $sql = "INSERT INTO $this->table (className, statuss, idCourses) VALUES ('$className', 1,'$idCourses')";
         try {
             $this->conn->begin_transaction();

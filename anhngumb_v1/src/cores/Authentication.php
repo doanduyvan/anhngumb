@@ -20,11 +20,11 @@ class Authentication{
         // ];
     }
 
-    static function isLoginSession(): bool {
+    static function isLoginSession() {
         return isset($_SESSION['acc']) ? true : false;
     }
 
-    static function isLoginCookie(): bool {
+    static function isLoginCookie() {
         if(isset($_COOKIE['user_token_mb'])){
             $token = $_COOKIE['user_token_mb'];
             $userData = self::decryption($token);
@@ -108,12 +108,12 @@ class Authentication{
         }
     }
 
-    static function encryption($arrAccount): string{
+    static function encryption($arrAccount){
         $serialized = serialize($arrAccount);
         return base64_encode($serialized);
     }
     
-    static function decryption($stringAccount): array | false{
+    static function decryption($stringAccount) {
         $decoded = base64_decode($stringAccount, true); // true để trả về false nếu chuỗi không hợp lệ
         if ($decoded === false) {
             return false; // Nếu không thể giải mã base64, trả về false

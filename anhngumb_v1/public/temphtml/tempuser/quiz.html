@@ -14,6 +14,10 @@
         border-radius: 5px;
     }
 
+    .dv-content-quiz-box.quizzes{
+        margin-top: 10px;
+    }
+
     .dv-content-quiz-box.quizzes .quiz-title {
         font-size: 22px;
         font-weight: bold;
@@ -188,14 +192,65 @@
 
 
 
+<style>
 
+
+    .dv-content-quiz-box.boxinfo .dv-top a:first-child{
+        color: #22bab3;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .dv-content-quiz-box.boxinfo .dv-top a:last-child{
+        color: black;
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .dv-content-quiz-box.boxinfo .dv-top a:hover{
+        text-decoration: underline;
+    }
+
+    .dv-content-quiz-box.boxinfo .dv-bottom{
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .dv-content-quiz-box.boxinfo .dv-bottom .progress{
+        --score: 0%;
+        flex: 1;
+        height: 10px;
+        background-color: white;
+        border: 1px solid rgb(173, 173, 173);
+        border-radius: 10px;
+        padding: 1.5px;
+        overflow: hidden;
+    }
+    .dv-content-quiz-box.boxinfo .dv-bottom .progress .progress_bar{
+        width: var(--score);
+        height: 100%;
+        background-color: green;
+        border-radius: 5px;
+    }
+
+
+</style>
 
 
 
 
 <div class="dv-content-quiz">
 
-
+    <div class="dv-content-quiz-box boxinfo">
+        <!-- <div class="dv-top"><a href="#">K198:</a> <a href="#">Unit 1</a></div>
+        <div class="dv-bottom">
+            <div class="progress" style="--score: 90%">
+                <div class="progress_bar"></div>
+            </div>
+            <div>0% Learnt</div>
+        </div> -->
+    </div>
 
     <div class="dv-content-quiz-box quizzes">
         <form action="" id="formQuizzes">
@@ -259,245 +314,26 @@
 <script type="module">
     import { mbNotification, mbConfirm, mbLoading, mbFetch, mbPagination, mbFormData } from './public/js/allmodule.js';
 
-    const Quizdemo = {
-    id: 1,
-    idClasses: 1,
-    totalQuestions: 3,
-    title: "Quiz 1",
-    mediaCMS: {
-        title: "Listen to the following passage and answer the questions",
-        type: 0,
-        content: "https://dl.dropboxusercontent.com/s/ejcptfmie85ygd4/Lesson1-Whatareyoudoing-Englishcommunication-a.mp3?_=3"
-    },
-    questionsCMS: [
-        {
-            id: 1,
-            questionName: "She is very______. She always makes me laugh and forget my problems",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 1,
-                    answerName: "Sociable",
-                    isCorrect: false
-                },
-                {
-                    id: 2,
-                    answerName: "serious",
-                    isCorrect: false
-                },
-                {
-                    id: 3,
-                    answerName: "humorous",
-                    isCorrect: true
-                },
-                {
-                    id: 4,
-                    answerName: "Friendly",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 2,
-            questionName: "He has two children: a son and a_______",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 5,
-                    answerName: "daughter",
-                    isCorrect: true
-                },
-                {
-                    id: 6,
-                    answerName: "mother",
-                    isCorrect: false
-                },
-                {
-                    id: 7,
-                    answerName: "cousins",
-                    isCorrect: false
-                },
-                {
-                    id: 8,
-                    answerName: "uncle",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 3,
-            questionName: "Where can I buy some medicine? Is there_______a near here",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 9,
-                    answerName: "school",
-                    isCorrect: false
-                },
-                {
-                    id: 10,
-                    answerName: "pharmacy",
-                    isCorrect: true
-                },
-                {
-                    id: 11,
-                    answerName: "news-store",
-                    isCorrect: false
-                },
-                {
-                    id: 12,
-                    answerName: "bank",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 9,
-            questionName: "Câu hỏi nhập đáp án",
-            typeAnswers: 1,
-            answersCMS: {
-                id: 33,
-                answerName: "ok",
-                isCorrect: true
-            }
-        },
-        {
-            id: 4,
-            questionName: "I love listening to live music. Let's go to a_________this weekend",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 13,
-                    answerName: "concert",
-                    isCorrect: true
-                },
-                {
-                    id: 14,
-                    answerName: "hospital",
-                    isCorrect: false
-                },
-                {
-                    id: 15,
-                    answerName: "party",
-                    isCorrect: false
-                },
-                {
-                    id: 16,
-                    answerName: "dance",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 5,
-            questionName: "It's cold outside. I need to wear a_______",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 17,
-                    answerName: "jacket",
-                    isCorrect: true
-                },
-                {
-                    id: 18,
-                    answerName: "skirt",
-                    isCorrect: false
-                },
-                {
-                    id: 19,
-                    answerName: "shorts",
-                    isCorrect: false
-                },
-                {
-                    id: 20,
-                    answerName: "sandals",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 6,
-            questionName: "The meeting is_______Monday morning at 9 o'clock",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 21,
-                    answerName: "In",
-                    isCorrect: false
-                },
-                {
-                    id: 22,
-                    answerName: "on",
-                    isCorrect: true
-                },
-                {
-                    id: 23,
-                    answerName: "at",
-                    isCorrect: false
-                },
-                {
-                    id: 24,
-                    answerName: "by",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 7,
-            questionName: "Based on IPA pronunciation, choose the most suitable sound of beach /b....tf/",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 25,
-                    answerName: "/i:/",
-                    isCorrect: true
-                },
-                {
-                    id: 26,
-                    answerName: "/i/",
-                    isCorrect: false
-                },
-                {
-                    id: 27,
-                    answerName: "/e/",
-                    isCorrect: false
-                },
-                {
-                    id: 28,
-                    answerName: "/æ/",
-                    isCorrect: false
-                }
-            ]
-        },
-        {
-            id: 8,
-            questionName: "The children are playing______the garden.",
-            typeAnswers: 0,
-            answersCMS: [
-                {
-                    id: 29,
-                    answerName: "In",
-                    isCorrect: true
-                },
-                {
-                    id: 30,
-                    answerName: "on",
-                    isCorrect: false
-                },
-                {
-                    id: 31,
-                    answerName: "at",
-                    isCorrect: false
-                },
-                {
-                    id: 32,
-                    answerName: "by",
-                    isCorrect: false
-                }
-            ]
-        }
-    ]
-};
+    const divRoot = document.getElementById('root');
+    // divRoot.innerHTML = '';
+
+    // variable global
+
+    const dataPage = {
+        idClass: null,
+        idLesson: null,
+        idQuiz: null,
+    };
+
+
+    let quizResult = {
+        idQuizzesCMS: null,
+        idClasses: null,
+        score: 0,
+        answers: []
+    }
+
+    let quizzes = null;
 
     const STTABC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -507,14 +343,67 @@
     const listQuestions = formQuizzes.querySelector('.quizListQuestions');
     const score = formQuizzes.querySelector('.quize-score');
 
-    let quizResult = {
-        idQuizzesCMS: null,
-        idClasses: null,
-        score: 0,
-        answers: []
-    }
 
-    renderQuizzes(Quizdemo);
+        // kiểm tra có param idCourse không thì gắn vào dataPage
+        const urlParams = new URLSearchParams(window.location.search);
+        let idClass = urlParams.get('class');
+        let idLesson = urlParams.get('unit');
+        let idQuiz = urlParams.get('quiz');
+        // kiểm tra nếu param là số thì gắn vào dataPage
+        if (!isNaN(idClass)) {
+            dataPage.idClass = idClass;
+        }
+        if (!isNaN(idLesson)) {
+            dataPage.idLesson = idLesson;
+        }
+        if (!isNaN(idQuiz)) {
+            dataPage.idQuiz = idQuiz;
+        }
+
+        // lấy dữ liệu quiz
+
+        getQuiz();
+
+        
+
+        async function getQuiz(){
+            // kiểm tra các thuộc tính của dataPage, nếu có thuộc tính null thì cho dừng lại
+            if(dataPage.idClass === null || dataPage.idLesson === null || dataPage.idQuiz === null){
+                mbNotification('Error', 'Wrong link, please go back', 2,3);
+                return;
+            }
+
+            const url = `admin/quizzes/getQuestionByIdQuiz/${dataPage.idClass}/${dataPage.idLesson}/${dataPage.idQuiz}`;
+            try{
+                mbLoading(true);
+                quizzes = await mbFetch(url);
+                console.log(quizzes);
+                renderScore(quizzes.idClasses, quizzes.className, quizzes.idLesson, quizzes.lessonName, quizzes.scoreUnit);
+                renderQuizzes(quizzes);
+            }catch(err){
+                console.log(err);
+            }finally{
+                mbLoading(false);
+            }
+        }
+
+
+    function renderScore(idClass, className, idLesson, lessonName, scorePercent) {
+        const box2 = document.querySelector('.dv-content-quiz-box.boxinfo');
+        handlEmptyChildren(box2);
+        const divTop = document.createElement('div');
+        divTop.classList.add('dv-top');
+        divTop.innerHTML = `<a href="#">${className}:</a> <a href="#">${lessonName}</a>`;
+        const divBottom = document.createElement('div');
+        divBottom.classList.add('dv-bottom');
+        divBottom.innerHTML = `
+        <div class="progress" style="--score: ${scorePercent}%">
+            <div class="progress_bar"></div>
+        </div>
+        <div>${scorePercent}% Learnt</div>
+        `;
+        box2.append(divTop, divBottom);
+    }
 
     function renderQuizzes(data) {
         quizResult = {
@@ -602,7 +491,7 @@
             newbtn.textContent = 'Try Again';
             newbtn.type = 'button';
             newbtn.addEventListener('click', function () {
-                renderQuizzes(Quizdemo);
+                renderQuizzes(quizzes);
             });
             btnold.replaceWith(newbtn);
         }
@@ -636,7 +525,7 @@
         divBox.innerHTML = `
                     <span>${data.title}</span>
                     <audio controls>
-                        <source src="${data.content}" type="audio/mpeg">
+                        <source src="public/media/${data.content}" type="audio/mpeg">
                     </audio>
     `;
         return divBox;

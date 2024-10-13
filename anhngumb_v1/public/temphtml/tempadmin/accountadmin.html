@@ -372,7 +372,7 @@
     let objectFilter = {};
     const ojectPagination = {
         currentPage: 1,
-        limit: 5
+        limit: 20
     };
     let selectedIds = [];
     let dataAccounts = {
@@ -396,7 +396,7 @@
         getAccountsFilter();
     });
 
-
+    getAccountsFilter();
     async function getAccountsFilter() {
         const url = "admin/accounts/getAccountsFilter/" + ojectPagination.currentPage + "/" + ojectPagination.limit;
         try {
@@ -449,7 +449,6 @@
     }
 
     function trComponent(data) {
-
         const linkimg = data.avatar ? data.avatar : './public/img/default_profile.jpg';
         let className = "";
         if (data.className === null) {

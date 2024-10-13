@@ -183,7 +183,7 @@ class AccountModel
         $limit = $dataRow['limit'];
         $offset = ($currentPage - 1) * $limit;
         // viết câu lệnh truy vấn dựa trên các điều kiện trên
-        $sql = "select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
+        $sql = "select acc.id, acc.fullName, acc.email, acc.roles, acc.statuss, acc.createdAt,  acc.avatar, GROUP_CONCAT(CASE WHEN cl.statuss = 1 AND accl.statuss = 1 THEN cl.className END SEPARATOR ', ') AS className from accounts as acc
         left join accounts_classes as accl on acc.id = accl.idAccounts
         left join classes cl on cl.id = accl.idClasses";
 
@@ -206,6 +206,7 @@ class AccountModel
         }
 
         $sql .= " GROUP BY acc.id ORDER BY id DESC LIMIT $limit OFFSET $offset";
+
 
         $stmt = $this->conn->query($sql);
         $accounts = $stmt->fetch_all(MYSQLI_ASSOC);
