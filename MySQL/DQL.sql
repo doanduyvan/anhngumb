@@ -144,7 +144,30 @@ inner join classes as cla on cla.idCourses = cou.id
 inner join accounts_classes as ac on ac.idClasses = cla.id
 where qui.id = 148 and les.id = 1 and cla.id = 2 and ac.idAccounts = 11;
 
-        
+select m.title, m.type, m.content from mediacms as m where idQuizzesCMS = 148;
+
+-- lấy tổng số quiz của 1 lesson
+
+select count(qui.id) as totalQuiz from quizzescms as qui where qui.idLessons = 1;
+
+select sum(res.score) as totalScore from resultscms as res 
+inner join quizzescms as qui on qui.id = res.idQuizzesCMS
+inner join lessons as les on les.id = qui.idLessons
+where res.idAccounts = 11 and res.idClasses = 2 and les.id = 1 ;
+
+-- truy vấn câu hỏi và câu trả lời 
+
+select que.id as idQuestion,
+ que.questionName,
+ que.typeAnswers as type,
+ ans.id as idAnswer,
+ ans.answerName,
+ ans.isCorrect
+ from questionscms as que
+inner join answerscms as ans on ans.idQuestionsCMS = que.id
+where que.idQuizzesCMS = 148;
+
+
         
         
         

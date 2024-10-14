@@ -414,7 +414,7 @@
         }
         quizResult.idQuizzesCMS = data.id;
         quizResult.idClasses = data.idClasses;
-        quizTitle.textContent = data.title;
+        quizTitle.textContent = data.quizName;
         listQuestions.classList.remove('showResult');
         handlEmptyChildren(quizMedia);
         const mediaElement = hanldMediaComponent(data.mediaCMS)

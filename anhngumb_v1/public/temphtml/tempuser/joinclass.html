@@ -1,0 +1,111 @@
+<style>
+    .dv-content {
+        padding: 10px;
+    }
+
+    .dv-content .dv-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .dv-content .dv-box {
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .dv-content .dv-box.filter {
+        margin-top: 10px;
+    }
+
+    .dv-content .dv-box.filter form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: end;
+        gap: 10px;
+    }
+
+    .dv-content .dv-box.filter form>* {
+        flex: 1 1 100%;
+    }
+
+    .dv-content .dv-box.filter form>.form-group {
+        display: flex;
+        gap: 5px;
+    }
+
+    .dv-content .dv-box.filter form>.form-group label{
+        flex-basis: 20%;
+    }
+
+    @media (min-width: 500px) {
+
+        .dv-content .dv-box.filter form>* {
+            flex-basis: auto;
+        }
+
+        .dv-content .dv-box.filter form> .form-group {
+            flex: 1 1 calc(100% / 3 - 10px);
+        }
+
+        .dv-content .dv-box.filter form>.form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+
+    .dv-content .dv-box.filter form .form-group label {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .dv-content .dv-box.filter form .form-group select {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        color: #333;
+        outline: none;
+        width: 100%;
+        background-color: white;
+    }
+</style>
+
+<div class="dv-content">
+
+    <h4 class="dv-title">Classes</h4>
+    <div class="dv-box filter">
+        <form action="">
+            <div class="form-group">
+                <label for="filter">Course</label>
+                <select name="" id="">
+                    <option value="">All</option>
+                    <option value="">Course 1</option>
+                    <option value="">Course 2</option>
+                    <option value="">Course 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter">Class</label>
+                <select name="" id="">
+                    <option value="">All</option>
+                    <option value="">Class 1</option>
+                    <option value="">Class 2</option>
+                    <option value="">Class 3</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Show Result</button>
+        </form>
+    </div>
+</div>
+
+
+<script type="module">
+    import { mbNotification, mbConfirm, mbLoading, mbFetch, mbPagination, mbFormData } from './public/js/allmodule.js';
+
+
+</script>
