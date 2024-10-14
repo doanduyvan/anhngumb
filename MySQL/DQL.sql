@@ -100,8 +100,10 @@ inner join lessons as le on le.id = qu.idLessons
 inner join courses as co on co.id = le.idCourses
 inner join classes as cl on co.id = cl.idCourses
 inner join accounts_classes as ac on ac.idClasses = cl.id
-left join resultscms as re on re.idQuizzesCMS = qu.id
+left join resultscms as re on re.idClasses = cl.id and re.idQuizzesCMS = qu.id
 where ac.idAccounts = 11 and cl.id = 2 and qu.idLessons = 1;
+
+select * from resultscms;
 
 -- lấy quiz và điểm
 

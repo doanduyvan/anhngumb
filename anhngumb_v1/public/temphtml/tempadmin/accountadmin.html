@@ -488,6 +488,7 @@
             } else {
                 selectedIds = selectedIds.filter(selectedId => selectedId !== id);
             }
+            console.log(selectedIds);
         }
         return tr;
     }
@@ -550,6 +551,7 @@
         try {
             mbLoading(true);
             const dataRes = await mbFetch('admin/accounts/updateRoleAndStatus', dataReq);
+
             if (dataRes.error) {
                 mbNotification('Error', dataRes.error, 3);
             } else {
