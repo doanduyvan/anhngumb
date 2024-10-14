@@ -15,7 +15,7 @@ class ClassModel{
         $offset = ($currentPage - 1) * $itemsPerPage;
         $totalClasses = $this->getTotalClasses();
         $totalPages = ceil($totalClasses / $itemsPerPage);
-        $sql = "SELECT * FROM $this->table ORDER BY id DESC LIMIT $itemsPerPage OFFSET $offset";
+        $sql = "SELECT * FROM $this->table ORDER BY statuss DESC LIMIT $itemsPerPage OFFSET $offset";
         $stmt = $this->conn->query($sql);
         $classes = $stmt->fetch_all(MYSQLI_ASSOC);
         return [
