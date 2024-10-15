@@ -30,7 +30,6 @@ $dotenv->load();
 // dành cho server
 // define("WEB_ROOT", $_ENV['HTTP_ROOT']);
 
-
 new Cores\Router();
 
 // $test = new \Models\ClassDetailModel();

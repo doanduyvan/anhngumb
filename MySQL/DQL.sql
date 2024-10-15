@@ -169,6 +169,36 @@ select que.id as idQuestion,
 inner join answerscms as ans on ans.idQuestionsCMS = que.id
 where que.idQuizzesCMS = 148;
 
+-- lấy tất cả các lớp đang hoạt động bởi khóa học
+
+select * from classes where idCourses = 1 and statuss = 1 order by id desc;
+
+-- lấy class detail
+
+select co.courseName, cl.className, cl.id as idClass, ac.* from classes as cl
+inner join courses as co on co.id = cl.idCourses
+left join accounts_classes as ac on cl.id = ac.idClasses
+where cl.statuss = 1 and co.id = 1;
+
+-- kiểm tra đã có trong lớp chưa
+
+select * from accounts_classes as ac 
+where ac.idAccounts = 11;
+
+-- lấy class 1 người đã join vào
+
+select co.courseName, cl.className, cl.id as idClass from classes as cl
+inner join courses as co on co.id = cl.idCourses
+left join accounts_classes as ac on cl.id = ac.idClasses
+where ac.idAccounts = 11 and ac.statuss = 1;
+
+-- đếm số lượng thành viên của mỗi lớp
+
+select count(ac.idAccounts) from accounts_classes as ac
+where ac.idClasses = 1 and ac.statuss = 1
+
+
+
 
         
         
