@@ -19,7 +19,7 @@ class ClassesControllerAdmin
         $class->setTitle('Danh sách khóa học');
         $class->setActivePage(2);
         $class->addCSS('public/css/Admin/classAdmin.css');
-        $class->addJS('public/js/Admin/classAdmin.js');
+        $class->addJS('public/js/Admin/listClassAdmin.js');
         $class->render();
     }
     function addClassAdmin()

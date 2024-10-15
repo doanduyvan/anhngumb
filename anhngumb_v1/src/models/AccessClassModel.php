@@ -2,6 +2,8 @@
 
 namespace Models;
 
+use Google\Service\CloudControlsPartnerService\Console;
+
 class AccessClassModel
 {
 
@@ -40,10 +42,28 @@ where ac.statuss = 0;";
     }
 
 
-    public function deleteClassDetail($dataRow)
+    public function deleteAccessStatus($dataRow)
     {
-        $classDetailId = $dataRow['idAccounts'];
+        $classDetailId = $dataRow['idStudent'];
         $sql = "DELETE FROM $this->table WHERE idAccounts = $classDetailId";
+        try {
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $this->conn->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->conn->rollback();
+            return [
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    public function subaccessStatus($dataRow){
+        if(!empty($dataRow['idStudent']) && is_array($dataRow['idStudent'])){
+            
+        }
+        $classDetailId = $dataRow['idStudent'];
+        $sql = "UPDATE $this->table SET statuss = 1 WHERE idAccounts in ($classDetailId)";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);

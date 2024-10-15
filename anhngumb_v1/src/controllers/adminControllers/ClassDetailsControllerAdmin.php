@@ -32,11 +32,11 @@ class ClassDetailsControllerAdmin
             echo json_encode(['error' => 'Invalid classId']);
         }
     }
-    public function deleteClass()
+    public function deletedetailClass()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $datareq = json_decode(file_get_contents('php://input'), true);
-            $class = $this->classAccModel->deleteClassDetail($datareq);
+            $class = $this->classAccModel->deletedetailClass($datareq);
             echo json_encode($class);
         }
     }
