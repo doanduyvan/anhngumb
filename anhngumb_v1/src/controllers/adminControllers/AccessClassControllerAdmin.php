@@ -27,13 +27,19 @@ class AccessClassControllerAdmin
         $dataResponse = $this->classAccModel->getAccessStatuss();
         echo json_encode($dataResponse);
     }
-    public function deleteClass()
+    public function deleteAccessStatus()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $datareq = json_decode(file_get_contents('php://input'), true);
-            $class = $this->classAccModel->deleteClassDetail($datareq);
+            $class = $this->classAccModel->deleteAccessStatus($datareq);
             echo json_encode($class);
         }
     }
-
+    public function subaccessStatus(){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $datareq = json_decode(file_get_contents('php://input'), true);
+            $class = $this->classAccModel->subaccessStatus($datareq);
+            echo json_encode($class);
+        }
+    }
 }
