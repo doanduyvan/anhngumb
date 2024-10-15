@@ -102,4 +102,15 @@ class LessonModel
         $lessons = $stmt->fetch_all(MYSQLI_ASSOC);
         return $lessons;
     }
+
+    public function getLessonByIdCourse($idUser,$iClass){
+        $sql = "select le.lessonName, le.id as idLesson from lessons as le
+        inner join courses as co on co.id = le.idCourses
+        inner join classes as cl on co.id = cl.idCourses
+        inner join accounts_classes as ac on cl.id = ac.idClasses
+        where ac.idAccounts = $idUser and ac.statuss = 1 and cl.id = $iClass";
+        $stmt = $this->conn->query($sql);
+        $lessons = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $lessons;
+    }
 }

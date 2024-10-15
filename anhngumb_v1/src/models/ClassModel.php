@@ -5,9 +5,12 @@ class ClassModel{
     private $conn = null;
     private $table = 'classes';
 
+    private $classDetailModel = null;
+
     public function __construct()
     {
         $this->conn = BaseModel::getInstance();
+        $this->classDetailModel = new ClassDetailModel();
     }
 
     public function getClasses($itemsPerPage, $currentPage)
@@ -121,4 +124,37 @@ class ClassModel{
             ];
         }
     }
+
+    public function getClassesByUser($idUser){
+        $sql = "select c.className, c.id as idClass from classes c 
+        inner join accounts_classes ac on c.id = ac.idClasses
+        where ac.idAccounts = $idUser and ac.statuss = 1
+        order by c.id desc";
+        $stmt = $this->conn->query($sql);
+        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $classes;
+    }
+
+    public function getClassByCourse($idCourse){
+        $idCourse = $this->conn->real_escape_string($idCourse);
+        $sql = "select * from $this->table where idCourses = $idCourse and statuss = 1 order by id desc";
+        $stmt = $this->conn->query($sql);
+        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
+        return $classes;
+    }
+
+    public function getClassJoinedAndPending($idUser,$status){
+        $sql = "select co.courseName, cl.className, cl.id as idClass from classes as cl
+        inner join courses as co on co.id = cl.idCourses
+        left join accounts_classes as ac on cl.id = ac.idClasses
+        where ac.idAccounts = $idUser and ac.statuss = $status order by cl.id desc";
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($result as $key => $value) {
+            $result[$key]['quantityStudent'] = $this->classDetailModel->countMemberByClass($value['idClass']);
+        }
+        return $result;
+    }
+
 }

@@ -9,7 +9,6 @@ class ViewLayout extends ViewsBase
     private $role = 0;
     private $idParentPage;
     private $idChildPage = null;
-    // private $linkImg = 'public/img/default_profile.jpg';
     private $linkImg = null;
     public $templatehtml = '';
 
@@ -87,13 +86,8 @@ class ViewLayout extends ViewsBase
                 'submenu' => [
                     [
                         'id' => 2.1,
-                        'name' => 'Class 1',
-                        'link' => '#'
-                    ],
-                    [
-                        'id' => 2.2,
-                        'name' => 'Class 2',
-                        'link' => '#'
+                        'name' => 'My Classes',
+                        'link' => 'admin/classes/myclass'
                     ]
                 ]
             ],

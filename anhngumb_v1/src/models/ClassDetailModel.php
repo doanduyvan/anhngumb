@@ -21,13 +21,11 @@ class ClassDetailModel
     }
     public function getClassDetails($classId)
     {
-$sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from accounts_classes as ac 
-inner join classes as c on c.id = ac.idClasses
-inner join accounts as a on a.id = ac.idAccounts
-where ac.idClasses = $classId AND ac.statuss = 1";
-        // $stmt = $this->conn->prepare($sql);
-        // $stmt->bind_param("i", $classId);
-        // $stmt->execute();
+        $classId = $this->conn->real_escape_string($classId);
+        $sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from accounts_classes as ac 
+        inner join classes as c on c.id = ac.idClasses
+        inner join accounts as a on a.id = ac.idAccounts
+        where ac.idClasses = $classId AND ac.statuss = 1";
         $stmt = $this->conn->query($sql);
         $result = $stmt->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
@@ -37,6 +35,7 @@ where ac.idClasses = $classId AND ac.statuss = 1";
 
     public function getClassesById($classId)
     {
+        $classId = $this->conn->real_escape_string($classId);
         $sql = "SELECT * FROM $this->table WHERE id = $classId";
         $stmt = $this->conn->query($sql);
         $course = $stmt->fetch_assoc();
@@ -54,6 +53,8 @@ where ac.idClasses = $classId AND ac.statuss = 1";
     {
         $className = $dataRow['className'];
         $idCourses = $dataRow['courseId'];
+        $className = $this->conn->real_escape_string($className);
+        $idCourses = $this->conn->real_escape_string($idCourses);
         $sql = "INSERT INTO $this->table (className, statuss, idCourses) VALUES ('$className', 1,'$idCourses')";
         try {
             $this->conn->begin_transaction();
@@ -85,5 +86,113 @@ where ac.idClasses = $classId AND ac.statuss = 1";
                 'error' => $e->getMessage()
             ];
         }
+    }
+
+
+    function getClassByCourseAndClass($idUser, $idCourse, $idClass)
+    {
+
+        $idCourse = $this->conn->real_escape_string($idCourse);
+        if ($idClass !== null) {
+            $idClass = $this->conn->real_escape_string($idClass);
+        }
+        $sql = "select co.courseName, cl.className, cl.id as idClass, ac.* from classes as cl
+        inner join courses as co on co.id = cl.idCourses
+        left join accounts_classes as ac on cl.id = ac.idClasses
+        where cl.statuss = 1 and co.id = $idCourse";
+        if ($idClass !== null ) {
+            $sql .= " AND cl.id = $idClass";
+        }
+        $sql .= " ORDER BY cl.id DESC";
+
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetch_all(MYSQLI_ASSOC);
+
+        $dataRes = [];
+
+        foreach ($result as $key => $value) {
+            $idClass = $value['idClass'];
+            if(!isset($dataRes[$idClass])){
+                $dataRes[$idClass] = [
+                    'idClass' => $idClass,
+                    'className' => $value['className'],
+                    'courseName' => $value['courseName'],
+                    'quantityStudent' => 0,
+                    'statusUser' => null
+                ];
+            }
+
+            if($value['idAccounts'] !== null){
+                if($value['statuss'] == 1){
+                    $dataRes[$idClass]['quantityStudent']++;
+                }
+                if($value['idAccounts'] == $idUser){
+                    $dataRes[$idClass]['statusUser'] = $value['statuss'];
+                }
+            }
+        }
+
+        return array_values($dataRes);
+    }
+
+    function joinClass($idUser, $row)
+    {
+        $idClass = $row['idClass'];
+        $idClass = $this->conn->real_escape_string($idClass);
+
+        $sql = "select * from accounts_classes as ac 
+        where ac.idAccounts = $idUser and ac.idClasses = $idClass";
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetch_all(MYSQLI_ASSOC);
+        if(count($result) > 0){
+            return [
+                'error' => 'You have already joined this class'
+            ];
+        }
+
+        $sql = "INSERT INTO $this->table (idAccounts, idClasses, statuss) VALUES ($idUser, $idClass, 0)";
+
+        try{
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $this->conn->commit();
+            return true;
+        }catch(\Exception $e){
+            return [
+                'error' => $e->getMessage()
+            ];
+        }
+
+        echo json_encode($sql);
+        die();
+    }
+
+    function cancelJoinClass($idUser,$row){
+
+        $idClass = $row['idClass'];
+        $idClass = $this->conn->real_escape_string($idClass);
+
+        $sql = "delete from $this->table as ac
+        where ac.idAccounts = $idUser and ac.idClasses = $idClass and ac.statuss = 0";
+
+        try{
+            $this->conn->begin_transaction();
+            $this->conn->query($sql);
+            $this->conn->commit();
+            return true;
+        }catch(\Exception $e){
+            return [
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    function countMemberByClass($idClass){
+        $idClass = $this->conn->real_escape_string($idClass);
+        $sql = "select count(ac.idAccounts) as total from $this->table as ac
+        where ac.idClasses = $idClass and ac.statuss = 1";
+        $stmt = $this->conn->query($sql);
+        $result = $stmt->fetch_assoc();
+        return $result['total'];
     }
 }
