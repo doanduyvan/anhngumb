@@ -236,3 +236,12 @@
   
   /* view */
   
+.table-class input[type="checkbox"] {
+    cursor: pointer;
+  width: 20px;
+  aspect-ratio: 1/1;
+}
+.btnsub{
+    margin-bottom: 5px;
+    margin-left: auto;
+}

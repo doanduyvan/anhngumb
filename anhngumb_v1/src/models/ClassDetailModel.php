@@ -70,9 +70,9 @@ where ac.idClasses = $classId AND ac.statuss = 1";
         }
     }
 
-    public function deleteClassDetail($dataRow)
+    public function deletedetailClass($dataRow)
     {
-        $classDetailId = $dataRow['idAccounts'];
+        $classDetailId = $dataRow['idStudent'];
         $sql = "DELETE FROM $this->table WHERE idAccounts = $classDetailId";
         try {
             $this->conn->begin_transaction();
