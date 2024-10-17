@@ -194,11 +194,15 @@ where ac.idAccounts = 11 and ac.statuss = 1;
 
 -- đếm số lượng thành viên của mỗi lớp
 
-select count(ac.idAccounts) from accounts_classes as ac
-where ac.idClasses = 1 and ac.statuss = 1
+select count(ac.idAccounts) as members from accounts_classes as ac
+where ac.idClasses = 1 and ac.statuss = 1;
+
+select * from resultscms;
 
 
 
+update accounts_classes as ac set statuss = 1
+where ac.idAccounts in (4,4,5) and ac.idClasses in (4,6,6);
 
         
         

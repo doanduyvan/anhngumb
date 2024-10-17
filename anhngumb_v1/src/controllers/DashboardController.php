@@ -7,17 +7,9 @@ class DashboardController
         $dashboard = new \Views\ViewLayout();
         $dashboard->setTitle('Dashboard - AnhnguMB');
         $dashboard->setActivePage(1);
-        // $dashboard->addCSS('public/css/dashboard.css');
-        // $dashboard->addJS('public/js/dashboard.js');
+        $dashboard->templatehtml = file_get_contents('public/temphtml/tempuser/dashboarduser.html');
         $dashboard->render();
         
-    }
-
-    public function dashboar1(){
-        $dashboard = new \Views\ViewLayout();
-        $dashboard->setTitle('Dashboard - AnhnguMB');
-        $dashboard->setActivePage(1);
-        $dashboard->render();
     }
 
     // method for ajax

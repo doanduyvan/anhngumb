@@ -293,21 +293,20 @@ class ViewLayout extends ViewsBase
         <header class="w-full h-[50px] fixed top-0 left-0 right-0 border-b-[1px] bg-white z-[1]">
             <div class="max-w-[100%] mx-auto h-full px-[10px] lg:px-[25px]">
                 <div class="flex h-full justify-between">
-                    <div class="py-[2px]"><img class="h-full" src="public/img/LogoMrBien-_banner@2x-1.png" alt=""></div>
+                    <a href="" class="py-[2px]"><img class="h-full" src="public/img/LogoMrBien-_banner@2x-1.png" alt=""></a>
                     <label for="check-notif" class="header_notif flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
                         </svg>
-                        <div class="header_quantity-notif"> <span>2</span> </div>
+                        <div class="header_quantity-notif"> <span>1</span> </div>
                         <input type="checkbox" class="check-notif" id="check-notif" hidden>
                         <label for="check-notif" class="overllay-notif"></label>
                         <div class="header_notif_contents">
                             <ul>
-                                <li><a href="#">Thông Báo 1 thong bao 2 thong bao 3</a></li>
                                 <li><a href="#">Thông Báo 1</a></li>
-                                <li><a class="noread" href="#">Thông Báo 1</a></li>
+                                <!-- <li><a class="noread" href="#">Thông Báo 1</a></li> -->
                             </ul>
                         </div>
                     </label>
@@ -323,7 +322,7 @@ class ViewLayout extends ViewsBase
                         <div class="flex md:flex-col justify-center items-center gap-[15px] md:gap-0 md:mt-[15px]">
                             <img class="w-[47px] md:w-[128px] aspect-square object-cover overflow-hidden rounded-[50%]" src="<?= $this->linkImg ?>" alt="">
                             <div class="flex flex-col justify-center items-center">
-                                <h3 class="font-bold md:mt-[5px]"><?= $this->userName ?></h3>
+                                <h3 class="font-bold md:mt-[5px]" id="userNameGlobal"><?= $this->userName ?></h3>
                                 <span class="text-[12px]"> <?= $this->roleName ?> </span>
                             </div>
                         </div>

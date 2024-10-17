@@ -22,6 +22,7 @@ class ClassesControllerAdmin
         $class->addJS('public/js/Admin/listClassAdmin.js');
         $class->render();
     }
+
     function addClassAdmin()
     {
         $class = new ViewLayout();
@@ -31,15 +32,18 @@ class ClassesControllerAdmin
         $class->addJS('public/js/Admin/addClassAdmin.js');
         $class->render();
     }
-    function listClassAdmin()
-    {
-        $class = new ViewLayout();
-        $class->setTitle('list classes');
-        $class->setActivePage(2);
-        $class->addCSS('public/css/Admin/classAdmin.css');
-        $class->addJS('public/js/Admin/listClassAdmin.js');
-        $class->render();
-    }
+
+
+    // function listClassAdmin()
+    // {
+    //     $class = new ViewLayout();
+    //     $class->setTitle('list classes');
+    //     $class->setActivePage(2);
+    //     $class->addCSS('public/css/Admin/classAdmin.css');
+    //     $class->addJS('public/js/Admin/listClassAdmin.js');
+    //     $class->render();
+    // }
+
     public function getclasses($currentPage = 1, $itemsPerPage = 20)
     {
         $class = $this->classModel->getClasses($itemsPerPage, $currentPage);
