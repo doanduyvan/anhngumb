@@ -4,13 +4,13 @@ namespace AdminControllers;
 
 use Views\ViewLayout;
 
-class AccessClassControllerAdmin
+class AccessclassControllerAdmin
 {
     private $classAccModel;
 
     function __construct()
     {
-        $this->classAccModel = new \Models\AccessClassModel();
+        $this->classAccModel = new \Models\AccessclassModel();
     }
 
     function index()
@@ -24,6 +24,7 @@ class AccessClassControllerAdmin
     }
     public function getAccessStatuss() 
     {
+
         $dataResponse = $this->classAccModel->getAccessStatuss();
         echo json_encode($dataResponse);
     }

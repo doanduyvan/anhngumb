@@ -122,6 +122,9 @@ class AccountModel
                 'error' => 'Account is not activated'
             ];
         }
+        $_SESSION['id'] = $row['id'];
+        $_SESSION['fullName'] = $row['fullName'];
+        $_SESSION['roles'] = $row['roles'];
         return [
             'id' => $row['id'],
             'fullName' => $row['fullName'],

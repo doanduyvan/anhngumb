@@ -60,7 +60,32 @@
     padding: 10px;
     background-color: white;
     border-radius: 5px;
+
 }
+.dv-content .list-Class .fromGroup{
+    margin-bottom: 10px;
+    display: flex;
+
+
+}
+.dv-content .list-Class .fromGroup .filter{
+    
+    display: flex;
+
+}
+.dv-content .list-Class .fromGroup .filter .filter-sel-1{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+}
+.dv-content .list-Class .fromGroup .filter .filter-sel{
+    display: flex;
+    flex-direction: column;
+flex: 2;
+}
+
 
 .dv-content .list-Class .list-Class-title{
     font-size: 20px;

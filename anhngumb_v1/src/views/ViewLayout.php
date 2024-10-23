@@ -113,7 +113,7 @@ class ViewLayout extends ViewsBase
                 'id' => 3,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),
-                'link' => '',
+                'link' => 'admin/Profile',  
                 'submenu' => null
             ],
             [
@@ -192,7 +192,7 @@ class ViewLayout extends ViewsBase
                 'id' => 4,
                 'name' => 'My Profile',
                 'svg' => file_get_contents("public/svgs/person.svg"),
-                'link' => 'admin/',
+                'link' => 'admin/Profile',
                 'submenu' => null
             ],
             [

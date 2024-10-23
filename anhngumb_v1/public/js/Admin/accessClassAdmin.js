@@ -57,6 +57,16 @@ let dataAccounts = {
   totalPages: 0,
 };
 
+let currentClass = null;
+
+// lấu url từ trình duyệt
+
+const urlParams = new URLSearchParams(window.location.search);
+let idClassUrl = urlParams.get("class");
+if (!isNaN(idClassUrl)) {
+  currentClass = parseInt(idClassUrl);
+}
+
 divRoot.innerHTML = listClassTemplate;
 const classObject = {
   currentPage: 1,
@@ -82,7 +92,10 @@ proxyCourse.currentPage = 1;
 async function renderClass() {
   const EliscourtLoading = document.querySelector(".dv-content .list-class");
   mbLoading(true, EliscourtLoading);
-  const url = "admin/accessclass/getAccessStatuss/";
+  let url = "admin/accessclass/getAccessStatuss/";
+  if (currentClass !== null) {
+    url += currentClass;
+  }
   let datares = [];
   try {
     datares = await mbFetch(url);
@@ -96,6 +109,7 @@ async function renderClass() {
   const students = datares;
 
   const tbdyclass = document.createElement("tbody");
+
   tbdyclass.id = "tbody-class";
   students.forEach((item) => {
     console.log(item);
@@ -129,7 +143,7 @@ async function renderClass() {
 function itemtr(item) {
   const tr = document.createElement("tr");
   tr.innerHTML = `
-    <td><input type="checkbox" class="check-account" data-id="${item.idStudent}"></td>
+    <td><input type="checkbox" class="check-account" data-id="${item.idStudent}" data-idclass="${item.idClasses}"></td>
                     <td>${item.fullName}</td>  
                     <td>${item.className}</td>
                     <td class="td-btn">
@@ -143,6 +157,23 @@ function itemtr(item) {
                         </button>
                     </td>
             `;
+
+  const btnsub = tr.querySelector(".btn-submit-student");
+  btnsub.onclick = function () {
+    const dataRow = [];
+    let itemid = {
+      idUser: item.idStudent,
+      idClass: item.idClasses,
+    };
+
+    dataRow.push(itemid);
+    console.log(dataRow);
+    const check = updateStatus(dataRow);
+    if (check) {
+      tr.remove();
+    }
+  };
+
   const btndel = tr.querySelector(".btn-del-student");
   btndel.onclick = async function () {
     const confirm = await mbConfirm(
@@ -155,33 +186,74 @@ function itemtr(item) {
     if (check) {
       tr.remove();
     }
-    
-  }
-const btnsub = tr.querySelector(".btn-submit-student");
-btnsub.onclick = function () {
-  const check = updateStatus(item.idStudent);
-    if (check) {
-      tr.remove();
-    }
-  
-}
+  };
+
   const input = tr.querySelector("input[type=checkbox]");
   input.addEventListener("change", (e) => {
     const check = e.target.checked;
-    const id = parseInt(e.target.dataset.id);
+    const idUser = parseInt(e.target.dataset.id);
+    const idClass = parseInt(e.target.dataset.idclass);
 
-    console.log(check, id);
+    let itemid = {
+      idUser: idUser,
+      idClass: idClass,
+    };
     if (check) {
-      if (!selectedIds.includes(id)) {
-        selectedIds.push(id);
+      // kiểm tra xem iduser và idclass có tồn tại chưa
+      let check = selectedIds.find(
+        (selectedId) =>
+          selectedId.idUser === idUser && selectedId.idClass === idClass
+      );
+      if (!check) {
+        selectedIds.push(itemid);
       }
     } else {
-      selectedIds = selectedIds.filter((selectedId) => selectedId !== id);
+      selectedIds = selectedIds.filter(
+        (selectedId) =>
+          selectedId.idUser !== idUser || selectedId.idClass !== idClass
+      );
     }
+
   });
- 
   return tr;
 }
+
+const checkaccountall = document.getElementById("check-account-all");
+checkaccountall.addEventListener("change", (e) => {
+  const checkaccounts = document.querySelectorAll(".check-account");
+  checkaccounts.forEach((item) => {
+    item.checked = e.target.checked;
+    const idUser = parseInt(item.dataset.id);
+    const idClass = parseInt(item.dataset.idclass);
+    let itemid = {
+      idUser: idUser,
+      idClass: idClass,
+    };
+    if (e.target.checked) {
+      let check = selectedIds.find(
+        (selectedId) =>
+          selectedId.idUser === idUser && selectedId.idClass === idClass
+      );
+      if (!check) {
+        selectedIds.push(itemid);
+      }
+    } else {
+      selectedIds = [];
+    }
+  });
+});
+
+const btnsub = document.querySelector("#btnsub");
+btnsub.onclick = function () {
+  selectedIds.forEach((item) => {
+    console.log(item.idUser);
+  const check = updateStatus(item.idStudent, item.idClasses);
+  if (check) {
+    emptyElement(document.getElementById("tbody-class"));
+  }
+  });
+};
+
 async function removeClass(accounts_classes) {
   return new Promise(async (resolve) => {
     const url = "admin/accessclass/deleteAccessStatus";
@@ -209,29 +281,13 @@ selectItemPerPage.addEventListener("change", function () {
   proxyCourse.itemPerPage = parseInt(this.value);
 });
 
-const checkaccountall = document.getElementById("check-account-all");
-checkaccountall.addEventListener("change", (e) => {
-  const checkaccounts = document.querySelectorAll(".check-account");
-  checkaccounts.forEach((item) => {
-    item.checked = e.target.checked;
-    const id = parseInt(item.dataset.id);
-    if (e.target.checked) {
-      if (!selectedIds.includes(id)) {
-        selectedIds.push(id);
-      }
-    } else {
-      selectedIds = [];
-    }
-  });
-});
 
 
-function updateStatus(id) {
+function updateStatus(oneRow = null) {
   return new Promise(async (resolve) => {
     const url = "admin/accessclass/subaccessStatus";
-    const datareq = { idStudent: id };
     try {
-      const datares = await mbFetch(url, datareq);
+      const datares = await mbFetch(url, oneRow ?? selectedIds);
       if (datares.error) {
         console.log(datares.error);
         resolve(false);
@@ -245,20 +301,9 @@ function updateStatus(id) {
     }
   });
 }
-const btnsubAll = document.getElementById("btnsub");
-btnsubAll.addEventListener("click", async () => {
-  for(const id of selectedIds){
-    const updatesuccess = await updateStatus(id);
-    // kiểm tra cập nhật thành công xóa id tương ứng
-    if(updatesuccess){
-      const checkbox = document.querySelector(`.check-account[data-id="${id}"]`);
-      // kiểm tra checkbox tồn tại
-      if(checkbox){
-        const tr = checkbox.parentElement.parentElement;
-        tr.remove();
-      }else{
-        console.log(`Không tìm tra checkbox với id: ${id}`);
-      }
-    }
+
+function emptyElement(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
   }
-});
+}

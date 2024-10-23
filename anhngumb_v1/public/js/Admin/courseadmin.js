@@ -1,5 +1,4 @@
 import { mbNotification, mbConfirm, mbLoading, mbFetch, mbPagination, mbFormData } from '../allmodule.js';
-
 // dùng để hiển thị ra template trước khi gọi tới DOM
 const divRoot = document.getElementById('root');
 const templateroot = `
