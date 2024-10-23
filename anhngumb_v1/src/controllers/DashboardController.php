@@ -16,16 +16,18 @@ class DashboardController
 
     public function getDashboardData()
     {
-        $data = [
+        $sanpham = [
             [
                 'id' => 1,
                 'name' => 'Đoàn Duy Vấn',
                 'age' => 20,
+                'price' => 1000,
             ],
             [
                 'id' => 2,
                 'name' => 'Nguyễn Văn A',
                 'age' => 21,
+                'price' => 1000,
             ],
             [
                 'id' => 3,
@@ -44,6 +46,6 @@ class DashboardController
             ],
         ];
         sleep(5);
-        echo json_encode($data);
+        // echo json_encode($data);
     }
 }
