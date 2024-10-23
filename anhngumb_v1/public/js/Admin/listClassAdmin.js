@@ -11,7 +11,24 @@ const divRoot = document.getElementById("root");
 const listClassTemplate = `
  <div class="dv-content">
         <div class="list-Class">
+            <div class="fromGroup">
             <h3 class="list-Class-title">List Class</h3>
+            <div class="filter">
+            <div class="filter-sel">
+                <label for="courseId" class="formLabel">Filter courses</label>
+                <select id="filter-class" name="courseId" class="formInput">
+                    <option value="">All</option>
+                </select>
+              </div>
+            <div class="filter-sel-1">
+                <label for="courseId" class="formLabel">Statuss</label>
+                <select id="statusSelect" name="statusSelect" class="formInput">  
+                    <option value="1">Active</option>
+                    <option value="0">Stop working</option>
+                </select>
+              </div>
+            </div>
+          </div>
             <div class="course-search">
                 <div class="course-search-box"></div>
             </div>
@@ -89,15 +106,61 @@ async function renderClass() {
   proxyCourse.totalPage = datares.totalPages;
   const data = datares.Classes;
 
-  const tbdyclass = document.createElement("tbody");
-  tbdyclass.id = "tbody-class";
-    data.forEach((item) => {
+  // hiển thị dữ liệu dựa trên trạng thái
+  function displayFilteredData(status = null, selectedCourse = null) {
+    const tbdyclass = document.createElement("tbody");
+    tbdyclass.id = "tbody-class";
+    const filteredData = data.filter((item) => {
+      return (
+        (status === null || item.statuss === status) &&
+        (selectedCourse === "" || item.idCourses === selectedCourse)
+      );
+    });
+    filteredData.forEach((item) => {
       const tr = itemtr(item);
       tbdyclass.appendChild(tr);
     });
-  const tbodyold = document.getElementById("tbody-class");
-  tbodyold.replaceWith(tbdyclass);
+    const tbodyold = document.getElementById("tbody-class");
+    if (tbodyold) {
+      tbodyold.replaceWith(tbdyclass);
+    } else {
+      const table = document.querySelector(".table-class");
+      table.appendChild(tbdyclass);
+    }
+  }
 
+  document.getElementById("statusSelect").addEventListener("change", function () {
+    const selectedStatus = this.value;
+    const selectedCourseId = document.getElementById("filter-class").value;
+    displayFilteredData(selectedStatus, selectedCourseId);
+  });
+  
+  // Lắng nghe sự kiện thay đổi trên phần tử <select> cho khóa học
+  document.getElementById("filter-class").addEventListener("change", function () {
+    const selectedStatus = document.getElementById("statusSelect").value;
+    const selectedCourseId = this.value;
+    displayFilteredData(selectedStatus, selectedCourseId);
+  });
+  // hiển thị dữ liệu mặc định khi tải trang.
+  displayFilteredData("1", "");
+  // ================================================================
+  // lấy danh sách khóa học để lọc
+  async function fetchCourses() {
+    const url = "admin/courses/getallcourses";
+    try {
+      const courses = await mbFetch(url);
+      const courseSelect = document.getElementById("filter-class");
+      courses.forEach((course) => {
+        const option = document.createElement("option");
+        option.value = course.id;
+        option.textContent = course.courseName;
+        courseSelect.appendChild(option);
+      });
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+    }
+  }
+  fetchCourses();
   // render pagination
   const paginationBox = document.querySelector(".list-class-pagination");
   const paginationUl = mbPagination(
@@ -145,7 +208,6 @@ function itemtr(item) {
                       </button>
                   </td>
           `;
-          console.log(item.id);
   const btnedit = tr.querySelector(".btn-edit-class");
   const btndel = tr.querySelector(".btn-del-class");
   const toggleSwitch = tr.querySelector(`#toggleSwitch-${item.id}`);
@@ -212,12 +274,36 @@ function showFormEditClass(data) {
                         <label for="" class="formLabel">Nhập tên khóa học</label>
                         <input type="text" value="${data.id}" name="id" hidden>
                         <input type="text" value="${data.className}" name="className" class="formInput" placeholder="">
+                        <div class="fromGroup">
+                      <label for="courseId" class="formLabel">Courses ID</label>
+                      <select id="courseId" name="courseId" class="formInput">
+                          <option value="">Select Course ID</option>
+                      </select>
+                    </div>
                     </div>
                     <button class="btn btn-primary">Accept</button>
                 </form>
         `;
+    console.log(data);
     const formEdit = boxcontent.querySelector(".formEdit");
     boxcontent.onclick = function (e) {
+      async function fetchCourses() {
+        const url = "admin/courses/getallcourses";
+        try {
+          const courses = await mbFetch(url);
+          const courseSelect = document.getElementById("courseId");
+
+          courses.forEach((course) => {
+            const option = document.createElement("option");
+            option.value = course.id;
+            option.textContent = course.courseName;
+            courseSelect.appendChild(option);
+          });
+        } catch (err) {
+          console.error("Error fetching courses:", err);
+        }
+      }
+      fetchCourses();
       if (!formEdit.contains(e.target)) {
         boxcontent.remove();
         resolve(null);
@@ -225,9 +311,12 @@ function showFormEditClass(data) {
     };
     formEdit.onsubmit = async function (e) {
       e.preventDefault();
-      const formData = mbFormData(formEdit);
-      if (formData.className === "") {
-        mbNotification("Error", "Please enter course name", 3);
+      const formData = {
+        courseId: document.getElementById("courseId").value,
+        className: document.getElementById("className").value,
+      };
+      if (!formData.courseId || !formData.className) {
+        mbNotification("Error", "Please enter all required fields", 3);
         return;
       }
       const urledit = "admin/classes/editClass";
@@ -274,5 +363,3 @@ const selectItemPerPage = document.querySelector(
 selectItemPerPage.addEventListener("change", function () {
   proxyCourse.itemPerPage = parseInt(this.value);
 });
-
-

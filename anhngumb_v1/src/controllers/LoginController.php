@@ -1,7 +1,6 @@
 <?php
 
 namespace Controllers;
-
 use Cores\Authentication;
 use Google\Service\ServiceControl\Auth;
 
