@@ -40,10 +40,13 @@ class ClassesControllerAdmin
         $class->addJS('public/js/Admin/listClassAdmin.js');
         $class->render();
     }
-    public function getclasses($currentPage = 1, $itemsPerPage = 20)
+    public function getclasses()
     {
-        $class = $this->classModel->getClasses($itemsPerPage, $currentPage);
-        echo json_encode($class);
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $datareq = json_decode(file_get_contents('php://input'), true);
+            $class = $this->classModel->getClasses($datareq);
+            echo json_encode($class);
+        }
     }
     public function addClass()
     {

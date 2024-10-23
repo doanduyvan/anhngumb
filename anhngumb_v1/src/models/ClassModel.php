@@ -13,17 +13,44 @@ class ClassModel{
         $this->classDetailModel = new ClassDetailModel();
     }
 
-    public function getClasses($itemsPerPage, $currentPage)
+    public function getClasses($dataRow)
     {
+        $currentPage = $dataRow['currentPage'];
+        $itemsPerPage = $dataRow['itemPerPage'];
+        $idCourses = $dataRow['idCourses'];
+        $status = $dataRow['status'];
+
+        $conditions = [];
+
+        if($idCourses !== null){
+            $conditions[] = "cl.idCourses = $idCourses";
+        }
+
+        if($status !== null){
+            $conditions[] = "cl.statuss = $status";
+        }
+
         $offset = ($currentPage - 1) * $itemsPerPage;
         $totalClasses = $this->getTotalClasses();
-        $totalPages = ceil($totalClasses / $itemsPerPage);
-        $sql = "SELECT * FROM $this->table ORDER BY id DESC LIMIT $itemsPerPage OFFSET $offset";
+
+        $sql = "select SQL_CALC_FOUND_ROWS cl.*, co.courseName from classes as cl
+        inner join courses as co on co.id = cl.idCourses";
+
+        if(count($conditions) > 0){
+            $sql .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $sql .= " ORDER BY cl.id DESC LIMIT $itemsPerPage OFFSET $offset";
+
         $stmt = $this->conn->query($sql);
+        $totalRow = $this->conn->query("SELECT FOUND_ROWS() as total")->fetch_assoc()['total'];
+        $totalPages = ceil($totalRow / $itemsPerPage);
         $classes = $stmt->fetch_all(MYSQLI_ASSOC);
+
         return [
             'Classes' => $classes,
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
+            'sql' => $sql
         ];
     }
 
@@ -60,7 +87,7 @@ class ClassModel{
     }
 
     public function editClass($dataRow){
-        $classId = $dataRow['id'];
+        $classId = $dataRow['classId'];
         $className = $dataRow['className'];
         $courseId = $dataRow['courseId'];
         $sql = "UPDATE $this->table SET className = '$className', idCourses = '$courseId' WHERE id = $classId";

@@ -35,6 +35,7 @@ const listClassTemplate = `
             <table class="table-class">
                 <thead>
                     <tr>
+                        <th>Course Name</th>
                         <th>Class Name</th>
                         <th>Class Details</th>
                         <th>Status</th>
@@ -62,6 +63,8 @@ const listClassTemplate = `
 
 divRoot.innerHTML = listClassTemplate;
 
+
+// biến toàn cục
 let coursesGlobal = [];
 
 const classObject = {
@@ -69,14 +72,27 @@ const classObject = {
   totalPage: null,
   itemPerPage: 5,
 };
+
+const statusResquest = {
+  currentPage: classObject.currentPage,
+  itemPerPage: classObject.itemPerPage,
+  idCourses: null,
+  status: 1
+}
+
 const handlerProxyCourse = {
   set(target, property, value) {
     target[property] = value;
     // Nếu người dùng thay đổi trang
+    updateStatusRequest();
     if (property === "currentPage") {
-      renderClass();
+      
+      console.log(statusResquest);
+      console.log(classObject);
+      getClass();
+
     } else if (property === "itemPerPage") {
-      renderClass();
+      getClass();
     }
     return true;
   },
@@ -85,17 +101,32 @@ const proxyCourse = new Proxy(classObject, handlerProxyCourse);
 
 proxyCourse.currentPage = 1;
 
-async function renderClass() {
+const Courses = [];
+
+( async () => {
+  const url = "admin/courses/getallcourses";
+  try {
+    const courses = await mbFetch(url);
+    courses.forEach(item => Courses.push(item));   
+    renderCourses(Courses);
+  } catch (err) {
+    console.error("Error fetching courses:", err);
+  }
+})();
+
+function updateStatusRequest() {
+  statusResquest.currentPage = classObject.currentPage;
+  statusResquest.itemPerPage = classObject.itemPerPage;
+}
+
+async function getClass(){
   const EliscourtLoading = document.querySelector(".dv-content .list-Class");
   mbLoading(true, EliscourtLoading);
-  const url =
-    "admin/classes/getclasses/" +
-    classObject.currentPage +
-    "/" +
-    classObject.itemPerPage;
+  const url = "admin/classes/getclasses/";
   let datares = [];
   try {
-    datares = await mbFetch(url);
+    datares = await mbFetch(url,statusResquest);
+    console.log(datares);
   } catch (err) {
     console.log(err);
     return;
@@ -105,63 +136,21 @@ async function renderClass() {
 
   proxyCourse.totalPage = datares.totalPages;
   const data = datares.Classes;
+  renderClass(data);
 
-  // hiển thị dữ liệu dựa trên trạng thái
-  function displayFilteredData(status = null, selectedCourse = null) {
-    const tbdyclass = document.createElement("tbody");
-    tbdyclass.id = "tbody-class";
-    const filteredData = data.filter((item) => {
-      return (
-        (status === null || item.statuss === status) &&
-        (selectedCourse === "" || item.idCourses === selectedCourse)
-      );
-    });
-    filteredData.forEach((item) => {
-      const tr = itemtr(item);
-      tbdyclass.appendChild(tr);
-    });
-    const tbodyold = document.getElementById("tbody-class");
-    if (tbodyold) {
-      tbodyold.replaceWith(tbdyclass);
-    } else {
-      const table = document.querySelector(".table-class");
-      table.appendChild(tbdyclass);
-    }
-  }
+}
 
-  document.getElementById("statusSelect").addEventListener("change", function () {
-    const selectedStatus = this.value;
-    const selectedCourseId = document.getElementById("filter-class").value;
-    displayFilteredData(selectedStatus, selectedCourseId);
+
+function renderClass(data){
+  const oldtbody = document.getElementById('tbody-class');
+  const newtbody = document.createElement("tbody");
+  newtbody.id = "tbody-class";
+  data.forEach(item => {
+    const tr = itemtr(item);
+    newtbody.appendChild(tr);
   });
-  
-  // Lắng nghe sự kiện thay đổi trên phần tử <select> cho khóa học
-  document.getElementById("filter-class").addEventListener("change", function () {
-    const selectedStatus = document.getElementById("statusSelect").value;
-    const selectedCourseId = this.value;
-    displayFilteredData(selectedStatus, selectedCourseId);
-  });
-  // hiển thị dữ liệu mặc định khi tải trang.
-  displayFilteredData("1", "");
-  // ================================================================
-  // lấy danh sách khóa học để lọc
-  async function fetchCourses() {
-    const url = "admin/courses/getallcourses";
-    try {
-      const courses = await mbFetch(url);
-      const courseSelect = document.getElementById("filter-class");
-      courses.forEach((course) => {
-        const option = document.createElement("option");
-        option.value = course.id;
-        option.textContent = course.courseName;
-        courseSelect.appendChild(option);
-      });
-    } catch (err) {
-      console.error("Error fetching courses:", err);
-    }
-  }
-  fetchCourses();
-  // render pagination
+  oldtbody.replaceWith(newtbody);
+
   const paginationBox = document.querySelector(".list-class-pagination");
   const paginationUl = mbPagination(
     classObject.currentPage,
@@ -180,11 +169,89 @@ async function renderClass() {
   });
 }
 
+// thay doi trang thai
+const EselectStatus = document.getElementById('statusSelect');
+EselectStatus.addEventListener('change', function(e){
+  let value = e.target.value;
+  value = parseInt(value);
+  statusResquest.status = value;
+  getClass();
+});
+
+async function renderClassfix() {
+
+
+  // hiển thị dữ liệu dựa trên trạng thái
+
+
+  document.getElementById("statusSelect").addEventListener("change", function () {
+    const selectedStatus = this.value;
+    const selectedCourseId = document.getElementById("filter-class").value;
+    displayFilteredData(selectedStatus, selectedCourseId);
+  });
+  
+  // Lắng nghe sự kiện thay đổi trên phần tử <select> cho khóa học
+  document.getElementById("filter-class").addEventListener("change", function () {
+    const selectedStatus = document.getElementById("statusSelect").value;
+    const selectedCourseId = this.value;
+    displayFilteredData(selectedStatus, selectedCourseId);
+  });
+ 
+  // displayFilteredData("1", "");
+  // ================================================================
+}
+
+
+
+
+ // lấy danh sách khóa học để lọc
+function renderCourses(courses) {
+    const courseSelect = document.getElementById("filter-class");
+    courses.forEach((course) => {
+      const option = document.createElement("option");
+      option.value = course.id;
+      option.textContent = course.courseName;
+      courseSelect.appendChild(option);
+    });
+
+    courseSelect.addEventListener('change', function (e){
+      const idCourse = parseInt(e.target.value);
+      statusResquest.idCourses = isNaN(idCourse) ? null : idCourse;
+      getClass();
+    });
+}
+
+// fetchCourses();
+
+ // hiển thị dữ liệu mặc định khi tải trang.
+// function displayFilteredData(status = null, selectedCourse = null) {
+//   const tbdyclass = document.createElement("tbody");
+//   tbdyclass.id = "tbody-class";
+//   const filteredData = data.filter((item) => {
+//     return (
+//       (status === null || item.statuss === status) &&
+//       (selectedCourse === "" || item.idCourses === selectedCourse)
+//     );
+//   });
+//   filteredData.forEach((item) => {
+//     const tr = itemtr(item);
+//     tbdyclass.appendChild(tr);
+//   });
+//   const tbodyold = document.getElementById("tbody-class");
+//   if (tbodyold) {
+//     tbodyold.replaceWith(tbdyclass);
+//   } else {
+//     const table = document.querySelector(".table-class");
+//     table.appendChild(tbdyclass);
+//   }
+// }
+
 // component item tr
 
 function itemtr(item) {
   const tr = document.createElement("tr");
   tr.innerHTML = `
+                  <td>${item.courseName}</td>
                   <td>${item.className}</td>
                    <td><a href="admin/classdetails?classId=${item.id}">Xem chi tiết</a></td>   
                   <td>
@@ -243,6 +310,9 @@ function itemtr(item) {
   btnedit.onclick = async function () {
     const data = await showFormEditClass(item);
     if (data) {
+      console.log(data);
+      const oneCourse = Courses.find((course) => course.id === data.idCourses);
+      data.courseName = oneCourse.courseName;
       const newtr = itemtr(data);
       tr.replaceWith(newtr);
     }
@@ -269,49 +339,46 @@ function showFormEditClass(data) {
     const boxcontent = document.createElement("div");
     boxcontent.classList.add("dv-edit-class");
     boxcontent.innerHTML = `
-                    <form action="" class="formEdit">
+                    <form class="formEdit">
                     <div class="fromGroup">
                         <label for="" class="formLabel">Nhập tên khóa học</label>
-                        <input type="text" value="${data.id}" name="id" hidden>
-                        <input type="text" value="${data.className}" name="className" class="formInput" placeholder="">
+                        <input type="text" value="${data.id}" name="id" id="idClass"  hidden>
+                        <input type="text" value="${data.className}" id="className" class="formInput" placeholder="">
                         <div class="fromGroup">
                       <label for="courseId" class="formLabel">Courses ID</label>
                       <select id="courseId" name="courseId" class="formInput">
-                          <option value="">Select Course ID</option>
+
                       </select>
                     </div>
                     </div>
                     <button class="btn btn-primary">Accept</button>
                 </form>
         `;
-    console.log(data);
-    const formEdit = boxcontent.querySelector(".formEdit");
-    boxcontent.onclick = function (e) {
-      async function fetchCourses() {
-        const url = "admin/courses/getallcourses";
-        try {
-          const courses = await mbFetch(url);
-          const courseSelect = document.getElementById("courseId");
 
-          courses.forEach((course) => {
-            const option = document.createElement("option");
-            option.value = course.id;
-            option.textContent = course.courseName;
-            courseSelect.appendChild(option);
-          });
-        } catch (err) {
-          console.error("Error fetching courses:", err);
-        }
-      }
-      fetchCourses();
+    const formEdit = boxcontent.querySelector(".formEdit");
+
+    boxcontent.onclick = function(e){
       if (!formEdit.contains(e.target)) {
         boxcontent.remove();
         resolve(null);
       }
-    };
+    }
+
+    const EselectCourses = boxcontent.querySelector("#courseId");
+    Courses.forEach((course) => {
+      const option = document.createElement("option");
+      option.value = course.id;
+      option.textContent = course.courseName;
+      EselectCourses.appendChild(option);
+      if(course.id == data.idCourses){
+        option.selected = true;
+      }
+    });
+
     formEdit.onsubmit = async function (e) {
       e.preventDefault();
       const formData = {
+        classId: document.getElementById("idClass").value,
         courseId: document.getElementById("courseId").value,
         className: document.getElementById("className").value,
       };
@@ -333,6 +400,30 @@ function showFormEditClass(data) {
     };
     box.appendChild(boxcontent);
   });
+}
+
+// fetchCourses();
+
+async function fetchCourses___xoa() {
+  const url = "admin/courses/getallcourses";
+  try {
+    const courses = await mbFetch(url);
+    console.log('courses', courses);
+    return;
+// Xóa các tùy chọn cũ nếu có
+    const courseSelect = document.getElementById("courseId");
+    courses.forEach((course) => {
+      const option = document.createElement("option");
+      option.value = course.id;
+      option.textContent = course.courseName;
+      courseSelect.appendChild(option);
+      if(course.idCourses === course.id){
+        option.selected = true;
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching courses:", err);
+  }
 }
 
 // xóa Lớp học

@@ -270,3 +270,7 @@ flex: 2;
     margin-bottom: 5px;
     margin-left: auto;
 }
+
+.formEdit{
+    user-select: none;
+}
