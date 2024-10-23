@@ -1,5 +1,4 @@
 import { mbNotification, mbFetch, mbFormData } from '../allmodule.js';
-
 const divRoot = document.getElementById("root");
 const addClassTemplate = `
     <div class="dv-content">

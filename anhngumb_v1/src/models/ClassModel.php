@@ -18,7 +18,7 @@ class ClassModel{
         $offset = ($currentPage - 1) * $itemsPerPage;
         $totalClasses = $this->getTotalClasses();
         $totalPages = ceil($totalClasses / $itemsPerPage);
-        $sql = "SELECT * FROM $this->table ORDER BY statuss DESC LIMIT $itemsPerPage OFFSET $offset";
+        $sql = "SELECT * FROM $this->table ORDER BY id DESC LIMIT $itemsPerPage OFFSET $offset";
         $stmt = $this->conn->query($sql);
         $classes = $stmt->fetch_all(MYSQLI_ASSOC);
         return [
@@ -62,7 +62,8 @@ class ClassModel{
     public function editClass($dataRow){
         $classId = $dataRow['id'];
         $className = $dataRow['className'];
-        $sql = "UPDATE $this->table SET className = '$className' WHERE id = $classId";
+        $courseId = $dataRow['courseId'];
+        $sql = "UPDATE $this->table SET className = '$className', idCourses = '$courseId' WHERE id = $classId";
         try {
             $this->conn->begin_transaction();
             $this->conn->query($sql);
@@ -135,13 +136,6 @@ class ClassModel{
         return $classes;
     }
 
-    public function getClassByCourse($idCourse){
-        $idCourse = $this->conn->real_escape_string($idCourse);
-        $sql = "select * from $this->table where idCourses = $idCourse and statuss = 1 order by id desc";
-        $stmt = $this->conn->query($sql);
-        $classes = $stmt->fetch_all(MYSQLI_ASSOC);
-        return $classes;
-    }
 
     public function getClassJoinedAndPending($idUser,$status){
         $sql = "select co.courseName, cl.className, cl.id as idClass from classes as cl

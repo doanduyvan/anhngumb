@@ -23,10 +23,10 @@ class AccessClassModel
     }
     public function getAccessStatuss()
     {
-$sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from $this->table as ac 
+        $sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from $this->table as ac 
 inner join classes as c on c.id = ac.idClasses
 inner join accounts as a on a.id = ac.idAccounts
-where ac.statuss = 0;";
+where ac.statuss = 0";
         $stmt = $this->conn->query($sql);
         $result = $stmt->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
@@ -58,15 +58,20 @@ where ac.statuss = 0;";
             ];
         }
     }
-    public function subaccessStatus($dataRow){
-        if(!empty($dataRow['idStudent']) && is_array($dataRow['idStudent'])){
-            
-        }
-        $classDetailId = $dataRow['idStudent'];
-        $sql = "UPDATE $this->table SET statuss = 1 WHERE idAccounts in ($classDetailId)";
+    public function subaccessStatus($dataRow)
+    {
+        // if (!empty($dataRow['idStudent']) && is_array($dataRow['idStudent'])) {
+        // }
         try {
+
             $this->conn->begin_transaction();
-            $this->conn->query($sql);
+
+            foreach ($dataRow as $item) {
+                $idUser = $item['idUser'];
+                $idClass = $item['idClass'];
+                $sql = "UPDATE $this->table SET statuss = 1 WHERE idAccounts = $idUser and idClasses = $idClass";
+                $this->conn->query($sql);
+            }
             $this->conn->commit();
             return true;
         } catch (\Exception $e) {

@@ -4,13 +4,13 @@ namespace AdminControllers;
 
 use Views\ViewLayout;
 
-class ClassDetailsControllerAdmin
+class ClassdetailsControllerAdmin
 {
     private $classAccModel;
 
     function __construct()
     {
-        $this->classAccModel = new \Models\ClassDetailModel();
+        $this->classAccModel = new \Models\ClassdetailModel();
     }
 
     function index()
