@@ -31,15 +31,15 @@ class ClassesControllerAdmin
         $class->addJS('public/js/Admin/addClassAdmin.js');
         $class->render();
     }
-    function listClassAdmin()
-    {
-        $class = new ViewLayout();
-        $class->setTitle('list classes');
-        $class->setActivePage(2);
-        $class->addCSS('public/css/Admin/classAdmin.css');
-        $class->addJS('public/js/Admin/listClassAdmin.js');
-        $class->render();
-    }
+    // function listClassAdmin()
+    // {
+    //     $class = new ViewLayout();
+    //     $class->setTitle('list classes');
+    //     $class->setActivePage(2);
+    //     $class->addCSS('public/css/Admin/classAdmin.css');
+    //     $class->addJS('public/js/Admin/listClassAdmin.js');
+    //     $class->render();
+    // }
     public function getclasses()
     {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){

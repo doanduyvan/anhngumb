@@ -52,7 +52,7 @@ const templateroot = `
         <div class="btn-bt">
           <button class="btn-change">Change Password</button>
           <button class="btn-save">Save</button>
-          <button class="btn-cancel">Cancel</button>
+          <a href="admin/" class="a-link"><button class="btn-cancel">Cancel</button></a>
       </div>
 
     </div>

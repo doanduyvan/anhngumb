@@ -2,7 +2,7 @@ import { mbNotification, mbFetch, mbFormData } from '../allmodule.js';
 const divRoot = document.getElementById("root");
 const addClassTemplate = `
     <div class="dv-content">
-        <div class="addClass">
+        <div class="addClass show">
             <button class="btn btn-primary btn-addClass">Add Lesson</button>
             <div class="addClass-box">
                 <form action="" class="addClass-form">

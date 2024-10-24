@@ -46,7 +46,7 @@ const listClassTemplate = `
 
 // variable global
 
-
+let selectedIds = [];
 let currentClass = {
   classId: null,
 };
@@ -102,12 +102,10 @@ async function renderClass() {
   }
 
   const students = datares.student;
-console.log(students);
   const tbdyclass = document.createElement("tbody");
 
   tbdyclass.id = "tbody-class";
   students.forEach((item) => {
-    console.log(item);
     const tr = itemtr(item);
     tbdyclass.appendChild(tr);
   });
@@ -160,7 +158,7 @@ function itemtr(item) {
       idUser: item.idStudent,
       idClass: item.idClasses,
     };
-
+    console.log(itemid);
     dataRow.push(itemid);
     console.log(dataRow);
     const check = updateStatus(dataRow);
