@@ -24,8 +24,8 @@ class AccessclassControllerAdmin
     }
     public function getAccessStatuss() 
     {
-
-        $dataResponse = $this->classAccModel->getAccessStatuss();
+        $datareq = json_decode(file_get_contents('php://input'), true);
+        $dataResponse = $this->classAccModel->getAccessStatuss($datareq);
         echo json_encode($dataResponse);
     }
     public function deleteAccessStatus()

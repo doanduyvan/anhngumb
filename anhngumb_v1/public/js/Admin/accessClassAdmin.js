@@ -46,25 +46,17 @@ const listClassTemplate = `
 
 // variable global
 
-let objectFilter = {};
-const ojectPagination = {
-  currentPage: 1,
-  limit: 5,
-};
-let selectedIds = [];
-let dataAccounts = {
-  accounts: [],
-  totalPages: 0,
-};
 
-let currentClass = null;
+let currentClass = {
+  classId: null,
+};
 
 // lấu url từ trình duyệt
 
 const urlParams = new URLSearchParams(window.location.search);
-let idClassUrl = urlParams.get("class");
+let idClassUrl = urlParams.get("classId");
 if (!isNaN(idClassUrl)) {
-  currentClass = parseInt(idClassUrl);
+  currentClass.classId = parseInt(idClassUrl);
 }
 
 divRoot.innerHTML = listClassTemplate;
@@ -93,12 +85,15 @@ async function renderClass() {
   const EliscourtLoading = document.querySelector(".dv-content .list-class");
   mbLoading(true, EliscourtLoading);
   let url = "admin/accessclass/getAccessStatuss/";
-  if (currentClass !== null) {
-    url += currentClass;
+  if (currentClass.classId !== null) {
+    url += currentClass.classId;
   }
+  console.log(url);
+  
   let datares = [];
   try {
-    datares = await mbFetch(url);
+    datares = await mbFetch(url, currentClass);
+    console.log(datares);
   } catch (err) {
     console.log(err);
     return;
@@ -106,8 +101,8 @@ async function renderClass() {
     mbLoading(false, EliscourtLoading);
   }
 
-  const students = datares;
-
+  const students = datares.student;
+console.log(students);
   const tbdyclass = document.createElement("tbody");
 
   tbdyclass.id = "tbody-class";

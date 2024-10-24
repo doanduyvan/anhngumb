@@ -31,8 +31,6 @@ class ClassModel{
         }
 
         $offset = ($currentPage - 1) * $itemsPerPage;
-        $totalClasses = $this->getTotalClasses();
-
         $sql = "select SQL_CALC_FOUND_ROWS cl.*, co.courseName from classes as cl
         inner join courses as co on co.id = cl.idCourses";
 

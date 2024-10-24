@@ -37,7 +37,8 @@ const listClassTemplate = `
                     <tr>
                         <th>Course Name</th>
                         <th>Class Name</th>
-                        <th>Class Details</th>
+                        <th>List Student</th>
+                        <th>Access Class</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -253,7 +254,8 @@ function itemtr(item) {
   tr.innerHTML = `
                   <td>${item.courseName}</td>
                   <td>${item.className}</td>
-                   <td><a href="admin/classdetails?classId=${item.id}">Xem chi tiết</a></td>   
+                   <td><a href="admin/classdetails?classId=${item.id}">Xem chi tiết</a></td> 
+                   <td><a href="admin/accessclass?classId=${item.id}">Yêu cầu tham gia</a></td>  
                   <td>
                     <label class="toggle-switch">
                       <input type="checkbox" id="toggleSwitch-${item.id}">
@@ -403,28 +405,6 @@ function showFormEditClass(data) {
 }
 
 // fetchCourses();
-
-async function fetchCourses___xoa() {
-  const url = "admin/courses/getallcourses";
-  try {
-    const courses = await mbFetch(url);
-    console.log('courses', courses);
-    return;
-// Xóa các tùy chọn cũ nếu có
-    const courseSelect = document.getElementById("courseId");
-    courses.forEach((course) => {
-      const option = document.createElement("option");
-      option.value = course.id;
-      option.textContent = course.courseName;
-      courseSelect.appendChild(option);
-      if(course.idCourses === course.id){
-        option.selected = true;
-      }
-    });
-  } catch (err) {
-    console.error("Error fetching courses:", err);
-  }
-}
 
 // xóa Lớp học
 

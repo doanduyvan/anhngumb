@@ -21,16 +21,26 @@ class AccessClassModel
         $class = $stmt->fetch_all(MYSQLI_ASSOC);
         return $class;
     }
-    public function getAccessStatuss()
+    public function getAccessStatuss($currentClass)
     {
+        $classId = $currentClass['classId'];
+        $conditions = [];
+        if($classId !== null){
+            $conditions[] = "ac.idClasses = $classId";
+        }
         $sql = "select ac.idClasses, c.className, a.id as idStudent, a.fullName, a.createdAt from $this->table as ac 
-inner join classes as c on c.id = ac.idClasses
-inner join accounts as a on a.id = ac.idAccounts
-where ac.statuss = 0";
+            inner join classes as c on c.id = ac.idClasses
+            inner join accounts as a on a.id = ac.idAccounts
+            where ac.statuss = 0 ";
+            if (count($conditions) > 0) {
+                $sql .= "AND " . implode(  $conditions);
+            }
         $stmt = $this->conn->query($sql);
         $result = $stmt->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        return $result;
+        return [
+            'student' => $result,
+            'sql' => $sql
+        ];
     }
 
 
